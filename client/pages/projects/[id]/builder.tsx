@@ -20,8 +20,14 @@ export default function BuilderPage() {
     return () => clearInterval(t);
   }, [save]);
 
+  const hist = useAppStore((s) => s.history);
+  const seed = useAppStore((s) => s.seedSample);
+  const empty = !hist?.present.pages[0].root.children?.length;
   return (
     <section className="h-[calc(100vh-4rem)]">
+      {empty && (
+        <div className="border-b bg-muted/30 px-4 py-2 text-sm">Empty project — <button className="underline" onClick={seed}>Create sample app</button></div>
+      )}
       <div className="flex h-full">
         <div className="w-72 shrink-0"><Palette /></div>
         <div className="flex-1 p-3"><Canvas /></div>
