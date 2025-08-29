@@ -27,20 +27,24 @@ export default function BuilderPage() {
 
   function handleDrop(e: DragEndEvent) {
     const data = e.active.data.current as any;
-    if (e.over?.id === "canvas" && data?.type) {
-      const page = getCurrentPage();
-      if (!page) return;
-      const catalog = CATALOG.find((c) => c.type === data.type);
-      const node: ComponentNode = {
-        id: crypto.randomUUID(),
-        type: data.type,
-        name: data.type,
-        props: { ...(catalog?.defaults || {}) },
-        children: [],
-      };
-      addNode(page.root.id, node);
-      setSel([node.id]);
-    }
+    if (!e.over || !data?.type) return;
+    const page = getCurrentPage();
+    if (!page) return;
+    const overId = String(e.over.id);
+    let parentId = page.root.id;
+    if (overId === "canvas") parentId = page.root.id;
+    else if (overId.startsWith("drop:")) parentId = overId.slice(5);
+
+    const catalog = CATALOG.find((c) => c.type === data.type);
+    const node: ComponentNode = {
+      id: crypto.randomUUID(),
+      type: data.type,
+      name: data.type,
+      props: { ...(catalog?.defaults || {}) },
+      children: [],
+    };
+    addNode(parentId, node);
+    setSel([node.id]);
   }
 
   const hist = useAppStore((s) => s.history);
