@@ -58,7 +58,7 @@ export default function BuilderPage() {
       <DndContext onDragEnd={handleDrop}>
         <div className="flex h-full">
           <div className="w-72 shrink-0"><Palette /></div>
-          <div className="flex-1 p-3"><Canvas /></div>
+          <div className="flex-1 min-h-0 overflow-y-auto p-3"><Canvas /></div>
           <div className="w-80 shrink-0"><Inspector /></div>
         </div>
       </DndContext>
