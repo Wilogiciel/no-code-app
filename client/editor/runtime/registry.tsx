@@ -1,8 +1,14 @@
 import { ComponentNode } from "@/editor/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { evalTemplate } from "@/editor/runtime/evalExpr";
 import { Separator } from "@/components/ui/separator";
@@ -27,6 +33,28 @@ export function renderNode(n: ComponentNode, ctx: any, handlers: Record<string, 
       }}>{n.props.text || "Button"}</Button>;
     case "Input":
       return <Input {...common} placeholder={n.props.placeholder} />;
+    case "Textarea":
+      return <Textarea {...common} placeholder={n.props.placeholder} />;
+    case "Select": {
+      const opts: any[] = Array.isArray(n.props.options) ? n.props.options : [];
+      const first = String(opts[0] ?? "");
+      return (
+        <Select defaultValue={first}>
+          <SelectTrigger className={common.className}>
+            <SelectValue placeholder="Select" />
+          </SelectTrigger>
+          <SelectContent>
+            {opts.map((o) => (
+              <SelectItem key={String(o)} value={String(o)}>
+                {String(o)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      );
+    }
+    case "Switch":
+      return <Switch className={common.className} defaultChecked={!!n.props.checked} />;
     case "Card":
       return (
         <Card {...common}>
@@ -68,6 +96,41 @@ export function renderNode(n: ComponentNode, ctx: any, handlers: Record<string, 
         </Table>
       );
     }
+    case "Tabs": {
+      const tabs: any[] = Array.isArray(n.props.tabs) ? n.props.tabs : ["One", "Two"];
+      const first = String(tabs[0] ?? "one");
+      return (
+        <Tabs defaultValue={first} className={common.className}>
+          <TabsList>
+            {tabs.map((t) => (
+              <TabsTrigger key={String(t)} value={String(t)}>
+                {String(t)}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+          {tabs.map((t, i) => (
+            <TabsContent key={String(t)} value={String(t)}>
+              {i === 0 ? (
+                <div className="mt-2">{renderChildren(n, ctx, handlers)}</div>
+              ) : (
+                <div className="mt-2 text-sm text-muted-foreground">Tab {String(t)}</div>
+              )}
+            </TabsContent>
+          ))}
+        </Tabs>
+      );
+    }
+    case "Alert":
+      return (
+        <Alert variant={n.props.variant as any} className={common.className}>
+          {n.props.title && <AlertTitle>{n.props.title}</AlertTitle>}
+          {n.props.text && <AlertDescription>{n.props.text}</AlertDescription>}
+        </Alert>
+      );
+    case "Badge":
+      return <Badge className={common.className} variant={n.props.variant as any}>{n.props.text || "Badge"}</Badge>;
+    case "Image":
+      return <img className={common.className} src={n.props.src} alt={n.props.alt || ""} />;
     default:
       return <div className="text-xs text-muted-foreground">Unsupported: {n.type}</div>;
   }
