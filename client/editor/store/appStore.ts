@@ -43,6 +43,7 @@ export type AppStore = {
   addPage: (page: PageSchema) => void;
   addVariable: (v: VariableDef) => void;
   addDataSource: (ds: DataSource) => void;
+  seedSample: () => void;
   undo: () => void;
   redo: () => void;
 };
@@ -127,6 +128,27 @@ export const useAppStore = create<AppStore>((set, get) => ({
     const hist = get().history; if (!hist) return;
     const app = hist.present;
     set({ history: push(hist, { ...app, dataSources: [...app.dataSources, ds] }) });
+  },
+  seedSample: () => {
+    const hist = get().history; if (!hist) return;
+    const app = hist.present;
+    const page = app.pages[0];
+    const root = page.root;
+    const button1: ComponentNode = { id: crypto.randomUUID(), type: "Button", name: "SayHi", props: { text: "Say hi" }, children: [] };
+    const button2: ComponentNode = { id: crypto.randomUUID(), type: "Button", name: "LoadPosts", props: { text: "Load posts" }, children: [] };
+    const card: ComponentNode = { id: crypto.randomUUID(), type: "Card", props: { title: "Sample" }, children: [
+      { id: crypto.randomUUID(), type: "Heading", props: { level: 3, text: "Welcome" }, children: [] },
+      button1,
+      button2,
+      { id: crypto.randomUUID(), type: "Table", props: {}, children: [] },
+    ] };
+    const variables = [
+      { id: crypto.randomUUID(), name: "username", scope: "app" as const, type: "string" as const, initial: "World" },
+      { id: crypto.randomUUID(), name: "posts", scope: "app" as const, type: "array" as const, initial: [] },
+    ];
+    const dataSources = [ { id: crypto.randomUUID(), kind: "rest" as const, name: "jsonplaceholder", baseUrl: "https://jsonplaceholder.typicode.com" } ];
+    const newApp = { ...app, variables, dataSources, pages: [ { ...page, root: { ...root, children: [card] } } ] };
+    set({ history: push(hist, newApp) });
   },
   undo: () => {
     const hist = get().history; if (!hist) return;
