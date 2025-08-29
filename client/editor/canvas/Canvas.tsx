@@ -74,8 +74,12 @@ export default function Canvas() {
   return (
     <Card className="relative w-full min-h-full p-4">
       <DropArea>
-        {(page?.root.children || []).map((n) => (
-          <NodeWrapper key={n.id} n={n} selected={sel.includes(n.id)} onSelect={(id: string) => setSel([id])} />
+        <DropSlot index={0} />
+        {(page?.root.children || []).map((n, i) => (
+          <div key={n.id}>
+            <NodeWrapper n={n} selected={sel.includes(n.id)} onSelect={(id: string) => setSel([id])} />
+            <DropSlot index={i + 1} />
+          </div>
         ))}
       </DropArea>
       <div className="absolute right-4 top-4">
