@@ -33,6 +33,7 @@ export default function Header() {
         </Link>
         <nav className="hidden items-center gap-1 md:flex">
           <NavLink to="/">Home</NavLink>
+          <NavLink to="/projects">Projects</NavLink>
           <NavLink to="/studio">Studio</NavLink>
         </nav>
         <div className="flex items-center gap-2">
