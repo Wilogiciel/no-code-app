@@ -26,6 +26,9 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/studio" element={<Studio />} />
+              <Route path="/projects" element={(() => { const C = require("./pages/projects/index").default; return <C />; })()} />
+              <Route path="/projects/:id/builder" element={(() => { const C = require("./pages/projects/[id]/builder").default; return <C />; })()} />
+              <Route path="/projects/:id/settings" element={(() => { const C = require("./pages/projects/[id]/settings").default; return <C />; })()} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
