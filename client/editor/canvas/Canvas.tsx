@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { renderNode } from "@/editor/runtime/registry";
 import Tree from "@/editor/canvas/Tree";
+import { useDroppable, useDraggable } from "@dnd-kit/core";
 
 function DropArea({ children }: { children?: React.ReactNode }) {
   const { setNodeRef, isOver } = useDroppable({ id: "canvas" });
