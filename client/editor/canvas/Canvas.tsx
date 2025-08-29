@@ -28,15 +28,22 @@ function DropSlot({ index }: { index: number }) {
 const CONTAINERS = new Set(["Row", "Column", "Grid", "Card"]);
 
 function NodeWrapper({ n, selected, onSelect }: any) {
-  const id = `drop:${n.id}`;
-  const { setNodeRef, isOver } = useDroppable({ id });
+  const dropId = `drop:${n.id}`;
+  const { setNodeRef, isOver } = useDroppable({ id: dropId });
+  const { attributes, listeners, setNodeRef: setDragRef, isDragging } = useDraggable({ id: `move:${n.id}`, data: { moveId: n.id } });
   return (
     <div
-      ref={CONTAINERS.has(n.type) ? setNodeRef : undefined}
+      ref={(el) => {
+        if (CONTAINERS.has(n.type)) setNodeRef(el);
+        setDragRef(el);
+      }}
+      {...listeners}
+      {...attributes}
       className={cn(
-        "cursor-pointer rounded border p-3",
+        "cursor-move rounded border p-3",
         selected ? "ring-2 ring-primary" : "hover:bg-accent/40",
         isOver ? "border-dashed border-primary" : "",
+        isDragging ? "opacity-50" : "",
       )}
       onClick={() => onSelect(n.id)}
     >
