@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { toast } from "sonner";
+import { evalTemplate } from "@/editor/runtime/evalExpr";
 
 export function renderNode(n: ComponentNode, ctx: any, handlers: Record<string, any>): JSX.Element | null {
   const common = { className: n.props.className } as any;
@@ -13,7 +15,11 @@ export function renderNode(n: ComponentNode, ctx: any, handlers: Record<string, 
       const H = (`h${n.props.level || 2}` as any);
       return <H {...common}>{n.props.text || "Heading"}</H>;
     case "Button":
-      return <Button {...common} onClick={handlers.onClick}>{n.props.text || "Button"}</Button>;
+      return <Button {...common} onClick={() => {
+        if (n.props.onClickToast) {
+          toast(evalTemplate(String(n.props.onClickToast), ctx));
+        }
+      }}>{n.props.text || "Button"}</Button>;
     case "Input":
       return <Input {...common} placeholder={n.props.placeholder} />;
     case "Card":
