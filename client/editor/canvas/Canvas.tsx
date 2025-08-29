@@ -56,12 +56,18 @@ export default function Canvas() {
   }, [setSel, sel, remove]);
 
   return (
-    <Card className="h-full w-full p-4">
+    <Card className="relative h-full w-full p-4">
       <DropArea>
         {(page?.root.children || []).map((n) => (
           <NodeWrapper key={n.id} n={n} selected={sel.includes(n.id)} onSelect={(id: string) => setSel([id])} />
         ))}
       </DropArea>
+      <div className="absolute right-4 top-4">
+        {(() => {
+          const Tree = require("@/editor/canvas/Tree").default;
+          return <Tree />;
+        })()}
+      </div>
     </Card>
   );
 }
