@@ -1,5 +1,4 @@
 import { CATALOG, CATEGORIES } from "@/editor/components-catalog/catalog";
-import { CATALOG, CATEGORIES } from "@/editor/components-catalog/catalog";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
