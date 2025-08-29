@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function PropsTab() {
   const sel = useAppStore((s) => s.selection);
@@ -28,10 +29,47 @@ export default function PropsTab() {
           <Input id="ph" value={node.props.placeholder || ""} onChange={(e) => update(node.id, { placeholder: e.target.value })} />
         </div>
       )}
-      {typeof node.props.checked !== "undefined" && (
-        <div className="flex items-center gap-2">
-          <Switch checked={!!node.props.checked} onCheckedChange={(v) => update(node.id, { checked: v })} />
-          <Label>Checked</Label>
+      {(node.type === "Row" || node.type === "Column") && (
+        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <Label>Align</Label>
+            <Select value={node.props.align || "center"} onValueChange={(v) => update(node.id, { align: v })}>
+              <SelectTrigger><SelectValue placeholder="align" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="start">start</SelectItem>
+                <SelectItem value="center">center</SelectItem>
+                <SelectItem value="end">end</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label>Justify</Label>
+            <Select value={node.props.justify || "start"} onValueChange={(v) => update(node.id, { justify: v })}>
+              <SelectTrigger><SelectValue placeholder="justify" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="start">start</SelectItem>
+                <SelectItem value="between">between</SelectItem>
+                <SelectItem value="center">center</SelectItem>
+                <SelectItem value="end">end</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label>Gap</Label>
+            <Input value={node.props.gap || "4"} onChange={(e) => update(node.id, { gap: e.target.value })} />
+          </div>
+        </div>
+      )}
+      {node.type === "Grid" && (
+        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <Label>Cols</Label>
+            <Input type="number" min={1} max={6} value={node.props.cols || 2} onChange={(e) => update(node.id, { cols: Number(e.target.value) })} />
+          </div>
+          <div>
+            <Label>Gap</Label>
+            <Input value={node.props.gap || "4"} onChange={(e) => update(node.id, { gap: e.target.value })} />
+          </div>
         </div>
       )}
       <Separator />
