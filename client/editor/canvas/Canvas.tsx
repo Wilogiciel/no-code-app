@@ -64,10 +64,7 @@ export default function Canvas() {
         ))}
       </DropArea>
       <div className="absolute right-4 top-4">
-        {(() => {
-          const Tree = require("@/editor/canvas/Tree").default;
-          return <Tree />;
-        })()}
+        <Tree />
       </div>
     </Card>
   );
