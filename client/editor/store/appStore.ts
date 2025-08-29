@@ -38,6 +38,7 @@ export type AppStore = {
   setSelection: (ids: string[]) => void;
   addNode: (parentId: string, node: ComponentNode) => void;
   removeNode: (id: string) => void;
+  moveNode: (id: string, newParentId: string, index?: number) => void;
   updateProps: (id: string, props: Record<string, any>) => void;
   updateBindings: (id: string, bindings: Record<string, string>) => void;
   addPage: (page: PageSchema) => void;
@@ -50,6 +51,47 @@ export type AppStore = {
 
 function storageKey(id: string) {
   return `app:${id}`;
+}
+
+function isDescendant(root: ComponentNode, ancestorId: string, targetId: string): boolean {
+  function find(n: ComponentNode): boolean {
+    if (n.id === ancestorId) {
+      return contains(n, targetId);
+    }
+    return (n.children || []).some(find);
+  }
+  function contains(n: ComponentNode, id: string): boolean {
+    if (n.id === id) return true;
+    return (n.children || []).some((c) => contains(c, id));
+  }
+  return find(root);
+}
+
+function detachNode(root: ComponentNode, id: string): { root: ComponentNode; node: ComponentNode | null } {
+  if (!root.children || root.children.length === 0) return { root, node: null };
+  let extracted: ComponentNode | null = null;
+  const children = root.children
+    .map((c) => {
+      if (c.id === id) {
+        extracted = c;
+        return null as any;
+      }
+      const res = detachNode(c, id);
+      if (res.node) extracted = res.node;
+      return res.root;
+    })
+    .filter(Boolean) as ComponentNode[];
+  const newRoot = { ...root, children } as ComponentNode;
+  return { root: newRoot, node: extracted };
+}
+
+function insertAt(root: ComponentNode, parentId: string, node: ComponentNode, index?: number): ComponentNode {
+  return updateNode(root, parentId, (n) => {
+    const arr = n.children ? [...n.children] : [];
+    const i = typeof index === "number" && index >= 0 && index <= arr.length ? index : arr.length;
+    arr.splice(i, 0, node);
+    (n as any).children = arr;
+  });
 }
 
 export const useAppStore = create<AppStore>((set, get) => ({
@@ -100,6 +142,20 @@ export const useAppStore = create<AppStore>((set, get) => ({
     const hist = get().history; if (!hist) return;
     const app = hist.present;
     const pages = app.pages.map((p) => ({ ...p, root: removeNode(p.root, id) }));
+    set({ history: push(hist, { ...app, pages }) });
+  },
+  moveNode: (id, newParentId, index) => {
+    const hist = get().history; if (!hist) return;
+    const app = hist.present;
+    const page = app.pages[0];
+    if (!page) return;
+    if (id === newParentId) return; // cannot parent to self
+    // prevent moving under its own subtree
+    if (isDescendant(page.root, id, newParentId)) return;
+    const det = detachNode(page.root, id);
+    if (!det.node) return;
+    const nextRoot = insertAt(det.root, newParentId, det.node, index);
+    const pages = [{ ...page, root: nextRoot }];
     set({ history: push(hist, { ...app, pages }) });
   },
   updateProps: (id, props) => {
