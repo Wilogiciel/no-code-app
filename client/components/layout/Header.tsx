@@ -1,31 +1,26 @@
 import { Link, useLocation } from "react-router-dom";
-import { Link, useLocation } from "react-router-dom";
+import { Link, NavLink as RRNavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { BrandLogo } from "@/components/BrandLogo";
 
-export default function Header() {
-  const { pathname } = useLocation();
-  const NavLink = ({
-    to,
-    children,
-  }: {
-    to: string;
-    children: React.ReactNode;
-  }) => (
-    <Link
+function NavItem({ to, children }: { to: string; children: React.ReactNode }) {
+  return (
+    <RRNavLink
       to={to}
-      className={cn(
-        "rounded-md px-3 py-2 text-sm font-medium transition-colors",
-        pathname === to
-          ? "text-foreground"
-          : "text-muted-foreground hover:text-foreground",
-      )}
+      className={({ isActive }) =>
+        cn(
+          "rounded-md px-3 py-2 text-sm font-medium transition-colors",
+          isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+        )
+      }
     >
       {children}
-    </Link>
+    </RRNavLink>
   );
+}
 
+export default function Header() {
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
@@ -33,9 +28,9 @@ export default function Header() {
           <BrandLogo />
         </Link>
         <nav className="hidden items-center gap-1 md:flex">
-          <NavLink to="/">Home</NavLink>
-          <NavLink to="/projects">Projects</NavLink>
-          <NavLink to="/studio">Studio</NavLink>
+          <NavItem to="/">Home</NavItem>
+          <NavItem to="/projects">Projects</NavItem>
+          <NavItem to="/studio">Studio</NavItem>
         </nav>
         <div className="flex items-center gap-2">
           <Button asChild variant="ghost">
