@@ -8,6 +8,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+import Studio from "./pages/Studio";
 
 const queryClient = new QueryClient();
 
@@ -18,30 +21,16 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <div className="flex min-h-screen flex-col">
-          <header>
-            {/* Header renders inside BrowserRouter to allow Links */}
-            {/**/}
-          </header>
-          {/* Lazy import to avoid SSR concerns */}
-          {(() => {
-            const Header = require("@/components/layout/Header").default;
-            return <Header />;
-          })()}
+          <Header />
           <main className="flex-1">
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/studio" element={(() => {
-                const Studio = require("./pages/Studio").default;
-                return <Studio />;
-              })()} />
+              <Route path="/studio" element={<Studio />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
-          {(() => {
-            const Footer = require("@/components/layout/Footer").default;
-            return <Footer />;
-          })()}
+          <Footer />
         </div>
       </BrowserRouter>
     </TooltipProvider>
