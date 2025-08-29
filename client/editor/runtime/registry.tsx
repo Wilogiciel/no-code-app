@@ -5,6 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 import { evalTemplate } from "@/editor/runtime/evalExpr";
+import { Separator } from "@/components/ui/separator";
+
+export function renderChildren(n: ComponentNode, ctx: any, handlers: Record<string, any>) {
+  return (n.children || []).map((c) => renderNode(c, ctx, handlers));
+}
 
 export function renderNode(n: ComponentNode, ctx: any, handlers: Record<string, any>): JSX.Element | null {
   const common = { className: n.props.className } as any;
@@ -28,9 +33,24 @@ export function renderNode(n: ComponentNode, ctx: any, handlers: Record<string, 
           {n.props.title && (
             <CardHeader><CardTitle>{n.props.title}</CardTitle></CardHeader>
           )}
-          <CardContent>{(n.children||[]).map((c) => renderNode(c, ctx, handlers))}</CardContent>
+          <CardContent>{renderChildren(n, ctx, handlers)}</CardContent>
         </Card>
       );
+    case "Row": {
+      const cls = `flex flex-row items-${n.props.align || "center"} justify-${n.props.justify || "start"} gap-${n.props.gap || "4"}`;
+      return <div {...common} className={`${cls} ${common.className || ""}`.trim()}>{renderChildren(n, ctx, handlers)}</div>;
+    }
+    case "Column": {
+      const cls = `flex flex-col items-${n.props.align || "start"} justify-${n.props.justify || "start"} gap-${n.props.gap || "4"}`;
+      return <div {...common} className={`${cls} ${common.className || ""}`.trim()}>{renderChildren(n, ctx, handlers)}</div>;
+    }
+    case "Grid": {
+      const cols = Number(n.props.cols || 2);
+      const cls = `grid grid-cols-${cols} gap-${n.props.gap || "4"}`;
+      return <div {...common} className={`${cls} ${common.className || ""}`.trim()}>{renderChildren(n, ctx, handlers)}</div>;
+    }
+    case "Separator":
+      return <Separator />;
     case "Table": {
       const rows: any[] = (ctx.vars?.posts || []).slice(0, 5);
       if (!rows?.length) return <div className="text-sm text-muted-foreground">No data</div>;
