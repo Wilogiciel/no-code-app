@@ -17,11 +17,32 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <div className="flex min-h-screen flex-col">
+          <header>
+            {/* Header renders inside BrowserRouter to allow Links */}
+            {/**/}
+          </header>
+          {/* Lazy import to avoid SSR concerns */}
+          {(() => {
+            const Header = require("@/components/layout/Header").default;
+            return <Header />;
+          })()}
+          <main className="flex-1">
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/studio" element={(() => {
+                const Studio = require("./pages/Studio").default;
+                return <Studio />;
+              })()} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
+          {(() => {
+            const Footer = require("@/components/layout/Footer").default;
+            return <Footer />;
+          })()}
+        </div>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
