@@ -18,6 +18,13 @@ function DropArea({ children }: { children?: React.ReactNode }) {
   );
 }
 
+function DropSlot({ index }: { index: number }) {
+  const { setNodeRef, isOver } = useDroppable({ id: `slot:root:${index}` });
+  return (
+    <div ref={setNodeRef} className={cn("h-3 transition-colors", isOver && "h-6 rounded border-2 border-dashed border-primary/50")}></div>
+  );
+}
+
 const CONTAINERS = new Set(["Row", "Column", "Grid", "Card"]);
 
 function NodeWrapper({ n, selected, onSelect }: any) {
