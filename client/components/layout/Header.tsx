@@ -20,7 +20,22 @@ function NavItem({ to, children }: { to: string; children: React.ReactNode }) {
   );
 }
 
+import { Switch } from "@/components/ui/switch";
+import { useEffect, useState } from "react";
+
 export default function Header() {
+  const [dark, setDark] = useState(false);
+  useEffect(() => {
+    const saved = localStorage.getItem("theme:dark") === "1";
+    setDark(saved);
+    document.documentElement.classList.toggle("dark", saved);
+  }, []);
+  function toggleDark(v: boolean) {
+    setDark(v);
+    document.documentElement.classList.toggle("dark", v);
+    localStorage.setItem("theme:dark", v ? "1" : "0");
+  }
+
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
@@ -32,7 +47,11 @@ export default function Header() {
           <NavItem to="/projects">Projects</NavItem>
           <NavItem to="/studio">Studio</NavItem>
         </nav>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <span>Dark</span>
+            <Switch checked={dark} onCheckedChange={toggleDark} />
+          </div>
           <Button asChild variant="ghost">
             <a href="#preview">Live preview</a>
           </Button>
