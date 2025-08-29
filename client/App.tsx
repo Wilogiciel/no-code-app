@@ -11,6 +11,9 @@ import NotFound from "./pages/NotFound";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Studio from "./pages/Studio";
+import ProjectsIndex from "./pages/projects/index";
+import BuilderPage from "./pages/projects/[id]/builder";
+import ProjectSettings from "./pages/projects/[id]/settings";
 
 const queryClient = new QueryClient();
 
