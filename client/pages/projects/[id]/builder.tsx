@@ -27,10 +27,32 @@ export default function BuilderPage() {
 
   function handleDrop(e: DragEndEvent) {
     const data = e.active.data.current as any;
-    if (!e.over || !data?.type) return;
+    if (!e.over) return;
     const page = getCurrentPage();
     if (!page) return;
     const overId = String(e.over.id);
+
+    // Move existing node
+    if (data?.moveId) {
+      const moveNode = useAppStore.getState().moveNode;
+      let parentId = page.root.id;
+      let index: number | undefined = undefined;
+      if (overId === "canvas") {
+        parentId = page.root.id;
+      } else if (overId.startsWith("slot:root:")) {
+        parentId = page.root.id;
+        index = parseInt(overId.split(":").pop() || "0", 10);
+      } else if (overId.startsWith("drop:")) {
+        parentId = overId.slice(5);
+        index = undefined; // append inside container
+      }
+      moveNode(data.moveId, parentId, index);
+      setSel([data.moveId]);
+      return;
+    }
+
+    // Add from palette
+    if (!data?.type) return;
     let parentId = page.root.id;
     if (overId === "canvas") parentId = page.root.id;
     else if (overId.startsWith("drop:")) parentId = overId.slice(5);
