@@ -70,7 +70,7 @@ export default function Palette() {
                             <DraggableItem type={c.type} title={c.title} />
                           </div>
                         </TooltipTrigger>
-                        <TooltipContent>Drag to canvas</TooltipContent>
+                        <TooltipContent>Drag or click to add</TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
                   ))}
