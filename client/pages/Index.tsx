@@ -63,7 +63,8 @@ export default function Index() {
               Build apps visually. Export clean code.
             </h1>
             <p className="mt-4 text-lg text-muted-foreground">
-              A low-code and no-code platform that helps you design, iterate, and export production-ready React code without vendor lock-in.
+              A low-code and no-code platform that helps you design, iterate,
+              and export production-ready React code without vendor lock-in.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Button asChild size="lg" className="px-8">
@@ -80,25 +81,32 @@ export default function Index() {
       {/* Features */}
       <section className="container py-10 sm:py-16">
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {[{
-            title: "Visual builder",
-            desc: "Drag, drop, and configure components with pixel-perfect control",
-          },{
-            title: "Code export",
-            desc: "Export readable React + Tailwind code any time",
-          },{
-            title: "Data ready",
-            desc: "Connect APIs and data sources without complexity",
-          },{
-            title: "Theme system",
-            desc: "Design tokens and dark mode out of the box",
-          },{
-            title: "Reusable blocks",
-            desc: "Create and reuse components across projects",
-          },{
-            title: "Production focused",
-            desc: "Accessibility, performance, and best practices",
-          }].map((f) => (
+          {[
+            {
+              title: "Visual builder",
+              desc: "Drag, drop, and configure components with pixel-perfect control",
+            },
+            {
+              title: "Code export",
+              desc: "Export readable React + Tailwind code any time",
+            },
+            {
+              title: "Data ready",
+              desc: "Connect APIs and data sources without complexity",
+            },
+            {
+              title: "Theme system",
+              desc: "Design tokens and dark mode out of the box",
+            },
+            {
+              title: "Reusable blocks",
+              desc: "Create and reuse components across projects",
+            },
+            {
+              title: "Production focused",
+              desc: "Accessibility, performance, and best practices",
+            },
+          ].map((f) => (
             <Card key={f.title} className="border-muted/60">
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold">{f.title}</h3>
@@ -113,9 +121,12 @@ export default function Index() {
       <section id="preview" className="container py-16">
         <div className="grid items-center gap-8 lg:grid-cols-2">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Design to code in one place</h2>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              Design to code in one place
+            </h2>
             <p className="mt-3 text-muted-foreground">
-              Toggle between a visual canvas and the exact code you’ll export. What you see is what you ship.
+              Toggle between a visual canvas and the exact code you’ll export.
+              What you see is what you ship.
             </p>
             <div className="mt-6 flex gap-3">
               <Button asChild>
@@ -124,7 +135,9 @@ export default function Index() {
               <Button variant="outline">Explore templates</Button>
             </div>
             {exampleFromServer && (
-              <p className="mt-4 text-xs text-muted-foreground">{exampleFromServer}</p>
+              <p className="mt-4 text-xs text-muted-foreground">
+                {exampleFromServer}
+              </p>
             )}
           </div>
           <Card className="border-muted/60">
@@ -163,13 +176,18 @@ export default function Hero() {
 
       {/* CTA */}
       <section className="container pb-20 pt-4">
-        <div className={cn(
-          "relative overflow-hidden rounded-2xl border p-8 sm:p-12",
-          "bg-gradient-to-br from-primary/10 via-accent/10 to-transparent",
-        )}>
-          <h3 className="text-2xl font-bold tracking-tight sm:text-3xl">Start building today</h3>
+        <div
+          className={cn(
+            "relative overflow-hidden rounded-2xl border p-8 sm:p-12",
+            "bg-gradient-to-br from-primary/10 via-accent/10 to-transparent",
+          )}
+        >
+          <h3 className="text-2xl font-bold tracking-tight sm:text-3xl">
+            Start building today
+          </h3>
           <p className="mt-2 max-w-2xl text-muted-foreground">
-            Click Start building to open the Studio. Keep prompting with the features you need and I’ll make it happen.
+            Click Start building to open the Studio. Keep prompting with the
+            features you need and I’ll make it happen.
           </p>
           <div className="mt-6">
             <Button asChild size="lg" className="px-8">

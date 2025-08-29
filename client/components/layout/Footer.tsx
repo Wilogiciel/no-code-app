@@ -5,7 +5,9 @@ export default function Footer() {
         <p className="text-center text-sm text-muted-foreground md:text-left">
           © {new Date().getFullYear()} FlowCraft — Build visually. Export code.
         </p>
-        <div className="text-sm text-muted-foreground">Crafted with ♥ for creators</div>
+        <div className="text-sm text-muted-foreground">
+          Crafted with ♥ for creators
+        </div>
       </div>
     </footer>
   );

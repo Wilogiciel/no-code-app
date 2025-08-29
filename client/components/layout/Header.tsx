@@ -5,12 +5,20 @@ import { BrandLogo } from "@/components/BrandLogo";
 
 export default function Header() {
   const { pathname } = useLocation();
-  const NavLink = ({ to, children }: { to: string; children: React.ReactNode }) => (
+  const NavLink = ({
+    to,
+    children,
+  }: {
+    to: string;
+    children: React.ReactNode;
+  }) => (
     <Link
       to={to}
       className={cn(
         "rounded-md px-3 py-2 text-sm font-medium transition-colors",
-        pathname === to ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+        pathname === to
+          ? "text-foreground"
+          : "text-muted-foreground hover:text-foreground",
       )}
     >
       {children}
