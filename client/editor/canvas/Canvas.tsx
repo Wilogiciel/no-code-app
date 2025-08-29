@@ -1,23 +1,24 @@
-import { useDroppable, DndContext, DragEndEvent } from "@dnd-kit/core";
+import { useDroppable } from "@dnd-kit/core";
 import { useAppStore, getCurrentPage } from "@/editor/store/appStore";
-import { ComponentNode } from "@/editor/types";
-import { CATALOG } from "@/editor/components-catalog/catalog";
 import { Card } from "@/components/ui/card";
 import { useEffect } from "react";
+import { cn } from "@/lib/utils";
+import { renderNode } from "@/editor/runtime/registry";
 
-function DropArea() {
+function DropArea({ children }: { children?: React.ReactNode }) {
   const { setNodeRef, isOver } = useDroppable({ id: "canvas" });
   return (
     <div ref={setNodeRef} className="min-h-[600px] rounded-lg border bg-background p-6">
       <div className="text-sm text-muted-foreground">Drop components here</div>
       {isOver && <div className="mt-2 rounded border-2 border-dashed border-primary/50 p-6" />}
+      <div className="mt-4 space-y-3">{children}</div>
     </div>
   );
 }
 
 export default function Canvas() {
-  const addNode = useAppStore((s) => s.addNode);
   const setSel = useAppStore((s) => s.setSelection);
+  const sel = useAppStore((s) => s.selection);
   const page = getCurrentPage();
 
   useEffect(() => {
@@ -28,27 +29,22 @@ export default function Canvas() {
     return () => window.removeEventListener("keydown", onKey);
   }, [setSel]);
 
-  function handleDrop(e: DragEndEvent) {
-    const data = e.active.data.current as any;
-    if (e.over?.id === "canvas" && data?.type) {
-      const catalog = CATALOG.find((c) => c.type === data.type);
-      const node: ComponentNode = {
-        id: crypto.randomUUID(),
-        type: data.type,
-        name: data.type,
-        props: { ...(catalog?.defaults || {}) },
-        children: [],
-      };
-      addNode(page!.root.id, node);
-      setSel([node.id]);
-    }
-  }
-
   return (
-    <DndContext onDragEnd={handleDrop}>
-      <Card className="h-full w-full p-4">
-        <DropArea />
-      </Card>
-    </DndContext>
+    <Card className="h-full w-full p-4">
+      <DropArea>
+        {(page?.root.children || []).map((n) => (
+          <div
+            key={n.id}
+            className={cn(
+              "cursor-pointer rounded border p-3",
+              sel.includes(n.id) ? "ring-2 ring-primary" : "hover:bg-accent/40",
+            )}
+            onClick={() => setSel([n.id])}
+          >
+            <div className="pointer-events-none">{renderNode(n, {}, {})}</div>
+          </div>
+        ))}
+      </DropArea>
+    </Card>
   );
 }
