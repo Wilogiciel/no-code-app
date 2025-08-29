@@ -1,17 +1,36 @@
 import { CATALOG, CATEGORIES } from "@/editor/components-catalog/catalog";
+import { CATALOG, CATEGORIES } from "@/editor/components-catalog/catalog";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useMemo, useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
+import { useAppStore, getCurrentPage } from "@/editor/store/appStore";
+import { ComponentNode } from "@/editor/types";
 
 function DraggableItem({ type, title }: { type: string; title: string }) {
   const { attributes, listeners, setNodeRef } = useDraggable({ id: `palette:${type}`, data: { type } });
+  const addNode = useAppStore((s) => s.addNode);
+  const setSel = useAppStore((s) => s.setSelection);
+  function handleClick() {
+    const page = getCurrentPage();
+    const catalog = CATALOG.find((c) => c.type === type);
+    if (!page) return;
+    const node: ComponentNode = {
+      id: crypto.randomUUID(),
+      type,
+      name: type,
+      props: { ...(catalog?.defaults || {}) },
+      children: [],
+    };
+    addNode(page.root.id, node);
+    setSel([node.id]);
+  }
   return (
-    <div ref={setNodeRef} {...listeners} {...attributes} className="flex cursor-grab items-center justify-between rounded-md border p-2 text-sm hover:bg-accent">
+    <div ref={setNodeRef} {...listeners} {...attributes} onClick={handleClick} className="flex cursor-grab items-center justify-between rounded-md border p-2 text-sm hover:bg-accent">
       <span>{title}</span>
-      <span className="text-xs text-muted-foreground">drag</span>
+      <span className="text-xs text-muted-foreground">drag • click</span>
     </div>
   );
 }
