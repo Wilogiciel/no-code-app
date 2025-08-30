@@ -72,6 +72,46 @@ export default function PropsTab() {
           </div>
         </div>
       )}
+      {(node.type === "Form" || node.type === "Forms") && (
+        <div className="grid grid-cols-2 gap-2">
+          <div className="col-span-2">
+            <Label>Path</Label>
+            <Input value={node.props.path || "/submit"} onChange={(e) => update(node.id, { path: e.target.value })} />
+          </div>
+          <div>
+            <Label>Method</Label>
+            <Select value={node.props.method || "POST"} onValueChange={(v) => update(node.id, { method: v })}>
+              <SelectTrigger><SelectValue placeholder="method" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="GET">GET</SelectItem>
+                <SelectItem value="POST">POST</SelectItem>
+                <SelectItem value="PUT">PUT</SelectItem>
+                <SelectItem value="DELETE">DELETE</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          {node.type === "Forms" && (
+            <>
+              <div>
+                <Label>Cols</Label>
+                <Input type="number" min={1} max={6} value={node.props.cols || 2} onChange={(e) => update(node.id, { cols: Number(e.target.value) })} />
+              </div>
+              <div className="col-span-2 mt-2 flex items-center justify-between">
+                <Label>Show reset button</Label>
+                <Switch checked={!!node.props.showReset} onCheckedChange={(v) => update(node.id, { showReset: v })} />
+              </div>
+              <div>
+                <Label>Submit text</Label>
+                <Input value={node.props.submitText || "Submit"} onChange={(e) => update(node.id, { submitText: e.target.value })} />
+              </div>
+              <div>
+                <Label>Reset text</Label>
+                <Input value={node.props.resetText || "Reset"} onChange={(e) => update(node.id, { resetText: e.target.value })} />
+              </div>
+            </>
+          )}
+        </div>
+      )}
       <Separator />
       <div>
         <Label htmlFor="class">Classes</Label>
