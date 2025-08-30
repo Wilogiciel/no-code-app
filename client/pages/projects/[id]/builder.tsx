@@ -123,6 +123,11 @@ export default function BuilderPage() {
   const [navAlign, setNavAlign] = useState("left");
   const [navClass, setNavClass] = useState("");
   const [showTheme, setShowTheme] = useState(true);
+  const [navLayout, setNavLayout] = useState("top"); // 'top' | 'side' | 'floating'
+  const [navSide, setNavSide] = useState("left"); // for side layout
+  const [navFloating, setNavFloating] = useState("top-left"); // for floating layout
+  const [navButtonVariant, setNavButtonVariant] = useState("default"); // Button variant for active page
+  const [navBarBg, setNavBarBg] = useState("bg-background/70"); // bar background class
 
   useEffect(() => {
     if (!openNav) return;
@@ -133,6 +138,11 @@ export default function BuilderPage() {
       setNavAlign(menu.props?.align || "left");
       setNavClass(menu.props?.className || "");
       setShowTheme(menu.props?.showTheme !== false);
+      setNavLayout(menu.props?.layout || "top");
+      setNavSide(menu.props?.side || "left");
+      setNavFloating(menu.props?.floating || "top-left");
+      setNavButtonVariant(menu.props?.buttonVariant || "default");
+      setNavBarBg(menu.props?.barBg || "bg-background/70");
     }
   }, [openNav, hist]);
 
@@ -159,6 +169,11 @@ export default function BuilderPage() {
         align: navAlign as any,
         className: navClass,
         showTheme,
+        layout: navLayout,
+        side: navSide,
+        floating: navFloating,
+        buttonVariant: navButtonVariant,
+        barBg: navBarBg,
       });
     }
     // Keep builder top bar in sync visually
@@ -278,6 +293,75 @@ export default function BuilderPage() {
                       <SelectItem value="left">left</SelectItem>
                       <SelectItem value="center">center</SelectItem>
                       <SelectItem value="right">right</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>Layout</Label>
+                  <Select value={navLayout} onValueChange={setNavLayout}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="layout" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="top">Top bar</SelectItem>
+                      <SelectItem value="side">Sidebar</SelectItem>
+                      <SelectItem value="floating">Floating</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {navLayout === "side" && (
+                  <div>
+                    <Label>Sidebar side</Label>
+                    <Select value={navSide} onValueChange={setNavSide}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="side" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="left">left</SelectItem>
+                        <SelectItem value="right">right</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+                {navLayout === "floating" && (
+                  <div>
+                    <Label>Floating position</Label>
+                    <Select value={navFloating} onValueChange={setNavFloating}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="position" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="top-left">top-left</SelectItem>
+                        <SelectItem value="top-right">top-right</SelectItem>
+                        <SelectItem value="bottom-left">bottom-left</SelectItem>
+                        <SelectItem value="bottom-right">bottom-right</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+                <div>
+                  <Label>Active button style</Label>
+                  <Select value={navButtonVariant} onValueChange={setNavButtonVariant}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="style" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="default">primary</SelectItem>
+                      <SelectItem value="secondary">secondary</SelectItem>
+                      <SelectItem value="outline">outline</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>Bar background</Label>
+                  <Select value={navBarBg} onValueChange={setNavBarBg}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="background" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="bg-background/70">background</SelectItem>
+                      <SelectItem value="bg-secondary">secondary</SelectItem>
+                      <SelectItem value="bg-transparent">transparent</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
