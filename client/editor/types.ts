@@ -71,8 +71,8 @@ export type AppSchema = {
     className?: string;
   };
   backend?: {
-    kind: "rest" | "webhook"; // extendable in future (firebase, supabase, etc.)
-    baseUrl?: string; // for kind="rest"
+    kind: "rest" | "webhook" | "firebase" | "supabase" | "netlify" | "vercel";
+    baseUrl?: string;
   };
 };
 
