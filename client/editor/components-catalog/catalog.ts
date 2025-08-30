@@ -16,6 +16,7 @@ export const CATALOG: CatalogItem[] = [
   { type: "Column", title: "Column (Flex)", category: "Layout", defaults: { align: "start", justify: "start", gap: "4" } },
   { type: "Grid", title: "Grid", category: "Layout", defaults: { cols: 2, gap: "4" } },
   { type: "Tabs", title: "Tabs", category: "Layout", defaults: { tabs: ["One","Two"] } },
+  { type: "Menu", title: "Menu (Top Nav)", category: "Navigation", defaults: { align: "left", showTheme: true } },
   { type: "Dialog", title: "Dialog", category: "Overlays", defaults: { title: "Dialog title", description: "Dialog description", triggerText: "Open Dialog" } },
   { type: "Table", title: "Table", category: "Data", defaults: {} },
   { type: "Alert", title: "Alert", category: "Feedback", defaults: { variant: "default", text: "Notice" } },
