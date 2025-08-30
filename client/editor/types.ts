@@ -54,6 +54,10 @@ export type AppSchema = {
     primary: string; // H S L (no hsl())
     secondary: string; // H S L
   };
+  nav?: {
+    align?: "left" | "center" | "right";
+    className?: string;
+  };
 };
 
 export type SelectionState = { selectedIds: string[] };
