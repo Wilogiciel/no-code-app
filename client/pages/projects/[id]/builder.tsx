@@ -26,6 +26,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Trash2 } from "lucide-react";
 
 function findFirstByType(
   n: ComponentNode | null | undefined,
@@ -108,6 +110,7 @@ export default function BuilderPage() {
   const updateApp = useAppStore((s) => s.updateApp);
   const updateProps = useAppStore((s) => s.updateProps);
   const addPage = useAppStore((s) => s.addPage);
+  const removePage = useAppStore((s) => s.removePage);
   const app = hist?.present;
   const [openNewPage, setOpenNewPage] = useState(false);
   const [openNav, setOpenNav] = useState(false);
@@ -173,13 +176,35 @@ export default function BuilderPage() {
       >
         <div className="flex flex-wrap items-center gap-2">
           {(app?.pages || []).map((p) => (
-            <Button
-              key={p.id}
-              variant={getCurrentPage()?.id === p.id ? "default" : "outline"}
-              onClick={() => setCurrentPage(p.id)}
-            >
-              {p.name}
-            </Button>
+            <div key={p.id} className="flex items-center gap-1">
+              <Button
+                variant={getCurrentPage()?.id === p.id ? "default" : "outline"}
+                onClick={() => setCurrentPage(p.id)}
+              >
+                {p.name}
+              </Button>
+              {(app?.pages?.length || 0) > 1 && (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="ghost" size="icon" aria-label={`Delete ${p.name}`}>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Delete page</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This will permanently remove the page "{p.name}". This action cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => removePage(p.id)}>Delete</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
+            </div>
           ))}
           <Dialog open={openNewPage} onOpenChange={setOpenNewPage}>
             <DialogTrigger asChild>
