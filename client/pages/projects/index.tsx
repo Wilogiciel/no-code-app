@@ -39,6 +39,8 @@ export default function ProjectsIndex() {
   const [secondaryHex, setSecondaryHex] = useState("#EEF2F7");
   const [darkPrimaryHex, setDarkPrimaryHex] = useState("#A78BFA");
   const [darkSecondaryHex, setDarkSecondaryHex] = useState("#1F2937");
+  const [backendKind, setBackendKind] = useState<"rest" | "webhook" | "firebase" | "supabase" | "netlify" | "vercel">("rest");
+  const [backendBaseUrl, setBackendBaseUrl] = useState("");
   useEffect(() => {
     setItems(listProjects());
   }, []);
