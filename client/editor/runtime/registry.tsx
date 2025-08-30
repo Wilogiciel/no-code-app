@@ -57,13 +57,68 @@ import { Calendar } from "@/components/ui/calendar";
 import { toast } from "sonner";
 import { evalTemplate } from "@/editor/runtime/evalExpr";
 import { Separator } from "@/components/ui/separator";
+import { useDroppable, useDraggable } from "@dnd-kit/core";
+import { cn } from "@/lib/utils";
+import type { ComponentNode } from "@/editor/types";
+
+const CONTAINERS = new Set([
+  "Root",
+  "Row",
+  "Column",
+  "Grid",
+  "Card",
+  "Dialog",
+  "Sheet",
+  "Drawer",
+  "Slide",
+  "Animate",
+  "Tabs",
+  "Forms",
+  "Form",
+]);
+
+function Frame({ node, children }: { node: ComponentNode; children: React.ReactNode }) {
+  const setSel = useAppStore((s) => s.setSelection);
+  const sel = useAppStore((s) => s.selection);
+  const isContainer = CONTAINERS.has(node.type);
+  const dropId = `drop:${node.id}`;
+  const { setNodeRef: setDropRef, isOver } = useDroppable({ id: dropId });
+  const { attributes, listeners, setNodeRef: setDragRef, isDragging } = useDraggable({ id: `move:${node.id}`, data: { moveId: node.id } });
+  return (
+    <div
+      ref={(el) => {
+        if (isContainer) setDropRef(el);
+        setDragRef(el as any);
+      }}
+      {...listeners}
+      {...attributes}
+      className={cn(
+        "cursor-move rounded border p-3",
+        sel.includes(node.id) ? "ring-2 ring-primary" : "hover:bg-accent/40",
+        isOver ? "border-dashed border-primary" : "",
+        isDragging ? "opacity-50" : "",
+      )}
+      onClick={(e) => {
+        e.stopPropagation();
+        setSel([node.id]);
+      }}
+    >
+      <div className="pointer-events-none">{children}</div>
+      {isOver && (
+        <div className="mt-2 text-xs text-primary">Drop inside {node.type}</div>
+      )}
+    </div>
+  );
+}
 
 export function renderChildren(
   n: ComponentNode,
   ctx: any,
   handlers: Record<string, any>,
 ) {
-  return (n.children || []).map((c) => renderNode(c, ctx, handlers));
+  return (n.children || []).map((c) => (
+    <Frame key={c.id} node={c}>{renderNode(c, ctx, handlers)}</Frame>
+  ));
 }
 
 export function renderNode(
