@@ -141,7 +141,18 @@ export default function BuilderPage() {
             </DialogContent>
           </Dialog>
         </div>
-        <div className="ml-auto">
+        <div className="ml-auto flex items-center gap-3">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <span>Dark</span>
+            <Switch
+              checked={dark}
+              onCheckedChange={(v) => {
+                setDark(v);
+                document.documentElement.classList.toggle("dark", v);
+                localStorage.setItem("theme:dark", v ? "1" : "0");
+              }}
+            />
+          </div>
           <Dialog open={openNav} onOpenChange={setOpenNav}>
             <DialogTrigger asChild><Button variant="outline">Nav settings</Button></DialogTrigger>
             <DialogContent>
