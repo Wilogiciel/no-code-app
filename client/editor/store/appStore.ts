@@ -34,10 +34,12 @@ export type AppStore = {
   history: HistoryState<AppSchema> | null;
   selection: string[];
   currentPageId: string | null;
+  canvasDark: boolean;
   loadApp: (appId: string) => void;
   saveApp: () => void;
   setSelection: (ids: string[]) => void;
   setCurrentPage: (pageId: string) => void;
+  setCanvasDark: (v: boolean) => void;
   updateApp: (patch: Partial<AppSchema>) => void;
   addNode: (parentId: string, node: ComponentNode) => void;
   removeNode: (id: string) => void;
@@ -102,6 +104,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
   history: null,
   selection: [],
   currentPageId: null,
+  canvasDark: false,
   loadApp: (appId) => {
     const raw = localStorage.getItem(storageKey(appId));
     let app: AppSchema;
@@ -114,7 +117,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
           {
             id: crypto.randomUUID(),
             name: "Home",
-            root: { id: crypto.randomUUID(), type: "Root", props: {}, children: [] },
+            root: { id: crypto.randomUUID(), type: "Root", props: {}, children: [ { id: crypto.randomUUID(), type: "Menu", props: { align: "left" }, children: [] } ] },
           },
         ],
         dataSources: [],
@@ -122,7 +125,8 @@ export const useAppStore = create<AppStore>((set, get) => ({
         theme: { primary: "258 85% 58%", secondary: "220 40% 96%" },
       };
     }
-    set({ appId, history: createHistory(app), currentPageId: app.pages[0].id });
+    const canvasDark = localStorage.getItem(`canvasDark:${appId}`) === "1";
+    set({ appId, history: createHistory(app), currentPageId: app.pages[0].id, canvasDark });
   },
   saveApp: () => {
     const id = get().appId;
@@ -132,6 +136,11 @@ export const useAppStore = create<AppStore>((set, get) => ({
   },
   setSelection: (ids) => set({ selection: ids }),
   setCurrentPage: (pageId) => set({ currentPageId: pageId }),
+  setCanvasDark: (v) => {
+    const id = get().appId;
+    if (id) localStorage.setItem(`canvasDark:${id}`, v ? "1" : "0");
+    set({ canvasDark: v });
+  },
   updateApp: (patch) => {
     const hist = get().history; if (!hist) return;
     const app = hist.present;
