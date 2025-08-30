@@ -53,6 +53,8 @@ export type AppSchema = {
   theme?: {
     primary: string; // H S L (no hsl())
     secondary: string; // H S L
+    darkPrimary?: string; // H S L for dark mode
+    darkSecondary?: string; // H S L for dark mode
   };
   nav?: {
     align?: "left" | "center" | "right";
