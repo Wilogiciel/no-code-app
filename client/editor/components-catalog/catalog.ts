@@ -118,6 +118,7 @@ export const CATALOG: CatalogItem[] = [
     defaults: { src: "https://picsum.photos/400/200", alt: "Image" },
   },
   { type: "Separator", title: "Separator", category: "Layout", defaults: {} },
+  { type: "Forms", title: "Forms (Form Layout)", category: "Layout", defaults: { cols: 2, path: "/submit", method: "POST", showReset: false, submitText: "Submit", resetText: "Reset", className: "space-y-4" } },
   { type: "Form", title: "Form", category: "Forms", defaults: { path: "/submit", method: "POST", className: "space-y-3" } },
 ];
 
