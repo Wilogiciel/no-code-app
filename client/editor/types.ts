@@ -70,6 +70,10 @@ export type AppSchema = {
     align?: "left" | "center" | "right";
     className?: string;
   };
+  backend?: {
+    kind: "rest" | "webhook"; // extendable in future (firebase, supabase, etc.)
+    baseUrl?: string; // for kind="rest"
+  };
 };
 
 export type SelectionState = { selectedIds: string[] };
