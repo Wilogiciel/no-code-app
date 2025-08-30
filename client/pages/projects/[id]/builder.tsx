@@ -79,7 +79,6 @@ export default function BuilderPage() {
     setSel([node.id]);
   }
 
-  const hist = useAppStore((s) => s.history);
   const seed = useAppStore((s) => s.seedSample);
   const empty = !hist?.present.pages[0].root.children?.length;
   return (
