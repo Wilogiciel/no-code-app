@@ -51,7 +51,12 @@ export default function ProjectsIndex() {
 
   function createWithTheme() {
     const id = crypto.randomUUID();
-    const theme = { primary: hexToHslString(primaryHex), secondary: hexToHslString(secondaryHex) };
+    const theme = {
+      primary: hexToHslString(primaryHex),
+      secondary: hexToHslString(secondaryHex),
+      darkPrimary: hexToHslString(darkPrimaryHex),
+      darkSecondary: hexToHslString(darkSecondaryHex),
+    };
     const app = { id, name, pages: [{ id: crypto.randomUUID(), name: "Home", root: { id: crypto.randomUUID(), type: "Root", props: {}, children: [] } }], variables: [], dataSources: [], theme };
     localStorage.setItem(`app:${id}`, JSON.stringify(app));
     setItems(listProjects());
