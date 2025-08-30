@@ -151,6 +151,13 @@ export const useAppStore = create<AppStore>((set, get) => ({
       // Build initial app with deterministic component IDs
       const used = new Set<string>();
       const gen = (type: string) => {
+        if (type === "Root") {
+          const rand = () => `root-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 10)}`;
+          let id = rand();
+          while (used.has(id)) id = rand();
+          used.add(id);
+          return id;
+        }
         let i = 1;
         let id = `${type}-${i}`;
         while (used.has(id)) {
@@ -429,6 +436,12 @@ export const useAppStore = create<AppStore>((set, get) => ({
           for (const c of n.children || []) collect(c);
         })(pg.root);
       }
+    }
+    if (type === "Root") {
+      const rand = () => `root-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 10)}`;
+      let id = rand();
+      while (used.has(id)) id = rand();
+      return id;
     }
     let i = 1;
     let id = `${type}-${i}`;
