@@ -10,6 +10,7 @@ export const CATALOG: CatalogItem[] = [
   { type: "Switch", title: "Switch", category: "Forms", defaults: { checked: false } },
   { type: "Date", title: "Date", category: "Forms", defaults: {} },
   { type: "Time", title: "Time", category: "Forms", defaults: {} },
+  { type: "DatePicker", title: "Date Picker", category: "Forms", defaults: {} },
   { type: "Card", title: "Card", category: "Layout", defaults: { title: "Card title" } },
   { type: "Row", title: "Row (Flex)", category: "Layout", defaults: { align: "center", justify: "start", gap: "4" } },
   { type: "Column", title: "Column (Flex)", category: "Layout", defaults: { align: "start", justify: "start", gap: "4" } },
