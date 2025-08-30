@@ -93,6 +93,20 @@ export default function ProjectsIndex() {
                     <Input value={secondaryHex} onChange={(e) => setSecondaryHex(e.target.value)} />
                   </div>
                 </div>
+                <div>
+                  <Label htmlFor="darkPrimary">Dark primary</Label>
+                  <div className="flex items-center gap-2">
+                    <input id="darkPrimary" type="color" value={darkPrimaryHex} onChange={(e) => setDarkPrimaryHex(e.target.value)} />
+                    <Input value={darkPrimaryHex} onChange={(e) => setDarkPrimaryHex(e.target.value)} />
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="darkSecondary">Dark secondary</Label>
+                  <div className="flex items-center gap-2">
+                    <input id="darkSecondary" type="color" value={darkSecondaryHex} onChange={(e) => setDarkSecondaryHex(e.target.value)} />
+                    <Input value={darkSecondaryHex} onChange={(e) => setDarkSecondaryHex(e.target.value)} />
+                  </div>
+                </div>
               </div>
               <div className="flex justify-end gap-2">
                 <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
