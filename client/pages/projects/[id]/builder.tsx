@@ -120,7 +120,7 @@ export default function BuilderPage() {
 
     const catalog = CATALOG.find((c) => c.type === data.type);
     const node: ComponentNode = {
-      id: crypto.randomUUID(),
+      id: useAppStore.getState().generateId(data.type),
       type: data.type,
       name: data.type,
       props: { ...(catalog?.defaults || {}) },
@@ -173,11 +173,11 @@ export default function BuilderPage() {
     const curPage = getCurrentPage();
     const existingMenu = findFirstByType(curPage?.root as any, "Menu");
     const menuProps = existingMenu?.props || { align: app?.nav?.align || "left", className: app?.nav?.className || "", showTheme: true };
-    const menuNode: ComponentNode = { id: crypto.randomUUID(), type: "Menu", props: menuProps, children: [] };
+    const menuNode: ComponentNode = { id: useAppStore.getState().generateId("Menu"), type: "Menu", props: menuProps, children: [] };
     const page: PageSchema = {
       id,
       name: pageName || `Page ${app?.pages.length ? app.pages.length + 1 : 1}`,
-      root: { id: crypto.randomUUID(), type: "Root", props: {}, children: [menuNode] },
+      root: { id: useAppStore.getState().generateId("Root"), type: "Root", props: {}, children: [menuNode] },
     };
     addPage(page);
     setCurrentPage(page.id);
