@@ -90,9 +90,30 @@ export default function Canvas() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setSel([]);
+
+      const target = e.target as HTMLElement | null;
+      const tag = (target?.tagName || "").toLowerCase();
+      const isEditable = !!(target && ((target as any).isContentEditable || tag === "input" || tag === "textarea" || tag === "select"));
+
       if ((e.key === "Delete" || e.key === "Backspace") && sel[0]) {
+        if (isEditable) return; // don't intercept text editing
         remove(sel[0]);
         setSel([]);
+        return;
+      }
+
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") {
+        if (isEditable) return; // let native input undo
+        if (e.shiftKey) useAppStore.getState().redo();
+        else useAppStore.getState().undo();
+        e.preventDefault();
+        return;
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "y") {
+        if (isEditable) return;
+        useAppStore.getState().redo();
+        e.preventDefault();
+        return;
       }
     };
     window.addEventListener("keydown", onKey);
