@@ -78,6 +78,38 @@ export default function PropsTab() {
           </div>
         </div>
       )}
+      {node.type === "Slide" && (
+        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <Label>Items per view</Label>
+            <Input type="number" min={1} max={6} value={node.props.itemsPerView || 1} onChange={(e) => update(node.id, { itemsPerView: Number(e.target.value) })} />
+          </div>
+          <div>
+            <Label>Gap</Label>
+            <Input value={node.props.gap || "4"} onChange={(e) => update(node.id, { gap: e.target.value })} />
+          </div>
+          <div className="col-span-2 mt-1 flex items-center justify-between">
+            <Label>Show arrows</Label>
+            <Switch checked={node.props.showArrows !== false} onCheckedChange={(v) => update(node.id, { showArrows: v })} />
+          </div>
+          <div className="col-span-2 mt-1 flex items-center justify-between">
+            <Label>Show dots</Label>
+            <Switch checked={node.props.showDots !== false} onCheckedChange={(v) => update(node.id, { showDots: v })} />
+          </div>
+          <div className="col-span-2 mt-1 flex items-center justify-between">
+            <Label>Autoplay</Label>
+            <Switch checked={!!node.props.autoplay} onCheckedChange={(v) => update(node.id, { autoplay: v })} />
+          </div>
+          <div>
+            <Label>Autoplay (ms)</Label>
+            <Input type="number" min={500} step={100} value={node.props.autoplayMs || 3000} onChange={(e) => update(node.id, { autoplayMs: Number(e.target.value) })} />
+          </div>
+          <div className="flex items-center justify-between">
+            <Label>Loop</Label>
+            <Switch checked={node.props.loop !== false} onCheckedChange={(v) => update(node.id, { loop: v })} />
+          </div>
+        </div>
+      )}
       {(node.type === "Form" || node.type === "Forms") && (
         <div className="grid grid-cols-2 gap-2">
           <div className="col-span-2">

@@ -204,6 +204,67 @@ export function renderNode(
         </div>
       );
     }
+    case "Slide": {
+      function SlideComp() {
+        const count = Math.max(1, Number(n.children?.length || 0));
+        const perView = Math.max(1, Number(n.props.itemsPerView || 1));
+        const showArrows = n.props.showArrows !== false;
+        const showDots = n.props.showDots !== false;
+        const gap = String(n.props.gap || "4");
+        const loop = n.props.loop !== false;
+        const autoplay = !!n.props.autoplay;
+        const autoplayMs = Math.max(500, Number(n.props.autoplayMs || 3000));
+        const [idx, setIdx] = React.useState(0);
+        const maxIdx = Math.max(0, count - perView);
+        const clamp = (v: number) => Math.max(0, Math.min(v, maxIdx));
+        const next = () => setIdx((i) => (loop ? (i >= maxIdx ? 0 : i + 1) : clamp(i + 1)));
+        const prev = () => setIdx((i) => (loop ? (i <= 0 ? maxIdx : i - 1) : clamp(i - 1)));
+
+        React.useEffect(() => {
+          if (!autoplay || count <= perView) return;
+          const t = setInterval(() => next(), autoplayMs);
+          return () => clearInterval(t);
+        }, [autoplay, autoplayMs, count, perView, maxIdx]);
+
+        const basis = 100 / perView;
+        const gapCls = `gap-${gap}`;
+        return (
+          <div className={`${common.className || ""}`}>
+            <div className={`relative overflow-hidden`}>
+              <div
+                className={`flex ${gapCls} transition-transform`}
+                style={{ transform: `translateX(-${idx * (100 / perView)}%)` }}
+              >
+                {(n.children || []).map((c, i) => (
+                  <div key={c.id || i} style={{ flex: `0 0 ${basis}%` }}>
+                    {renderNode(c, ctx, handlers)}
+                  </div>
+                ))}
+              </div>
+              {showArrows && count > perView && (
+                <>
+                  <button className="absolute left-2 top-1/2 -translate-y-1/2 rounded bg-background/80 px-2 py-1 shadow" onClick={prev} aria-label="Previous">‹</button>
+                  <button className="absolute right-2 top-1/2 -translate-y-1/2 rounded bg-background/80 px-2 py-1 shadow" onClick={next} aria-label="Next">›</button>
+                </>
+              )}
+            </div>
+            {showDots && count > perView && (
+              <div className="mt-2 flex items-center justify-center gap-2">
+                {Array.from({ length: maxIdx + 1 }).map((_, i) => (
+                  <button
+                    key={i}
+                    aria-label={`Go to slide ${i + 1}`}
+                    onClick={() => setIdx(i)}
+                    className={`h-2 w-2 rounded-full ${i === idx ? "bg-foreground" : "bg-muted-foreground/40"}`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      }
+      return <SlideComp />;
+    }
     case "Separator":
       return <Separator />;
     case "Table": {

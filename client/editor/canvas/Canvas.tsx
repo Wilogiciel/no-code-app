@@ -43,6 +43,7 @@ const CONTAINERS = new Set([
   "Dialog",
   "Sheet",
   "Drawer",
+  "Slide",
 ]);
 
 function NodeWrapper({ n, selected, onSelect }: any) {

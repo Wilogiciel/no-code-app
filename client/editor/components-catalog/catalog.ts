@@ -77,6 +77,12 @@ export const CATALOG: CatalogItem[] = [
     defaults: { cols: 2, gap: "4" },
   },
   {
+    type: "Slide",
+    title: "Slide (Carousel)",
+    category: "Layout",
+    defaults: { itemsPerView: 1, gap: "4", showArrows: true, showDots: true, autoplay: false, autoplayMs: 3000, loop: true },
+  },
+  {
     type: "Tabs",
     title: "Tabs",
     category: "Layout",
