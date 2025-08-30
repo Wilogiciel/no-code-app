@@ -77,13 +77,24 @@ const CONTAINERS = new Set([
   "Form",
 ]);
 
-function Frame({ node, children }: { node: ComponentNode; children: React.ReactNode }) {
+function Frame({
+  node,
+  children,
+}: {
+  node: ComponentNode;
+  children: React.ReactNode;
+}) {
   const setSel = useAppStore((s) => s.setSelection);
   const sel = useAppStore((s) => s.selection);
   const isContainer = CONTAINERS.has(node.type);
   const dropId = `drop:${node.id}`;
   const { setNodeRef: setDropRef, isOver } = useDroppable({ id: dropId });
-  const { attributes, listeners, setNodeRef: setDragRef, isDragging } = useDraggable({ id: `move:${node.id}`, data: { moveId: node.id } });
+  const {
+    attributes,
+    listeners,
+    setNodeRef: setDragRef,
+    isDragging,
+  } = useDraggable({ id: `move:${node.id}`, data: { moveId: node.id } });
   return (
     <div
       ref={(el) => {
@@ -117,7 +128,9 @@ export function renderChildren(
   handlers: Record<string, any>,
 ) {
   return (n.children || []).map((c) => (
-    <Frame key={c.id} node={c}>{renderNode(c, ctx, handlers)}</Frame>
+    <Frame key={c.id} node={c}>
+      {renderNode(c, ctx, handlers)}
+    </Frame>
   ));
 }
 
@@ -272,8 +285,10 @@ export function renderNode(
         const [idx, setIdx] = React.useState(0);
         const maxIdx = Math.max(0, count - perView);
         const clamp = (v: number) => Math.max(0, Math.min(v, maxIdx));
-        const next = () => setIdx((i) => (loop ? (i >= maxIdx ? 0 : i + 1) : clamp(i + 1)));
-        const prev = () => setIdx((i) => (loop ? (i <= 0 ? maxIdx : i - 1) : clamp(i - 1)));
+        const next = () =>
+          setIdx((i) => (loop ? (i >= maxIdx ? 0 : i + 1) : clamp(i + 1)));
+        const prev = () =>
+          setIdx((i) => (loop ? (i <= 0 ? maxIdx : i - 1) : clamp(i - 1)));
 
         React.useEffect(() => {
           if (!autoplay || count <= perView) return;
@@ -298,8 +313,20 @@ export function renderNode(
               </div>
               {showArrows && count > perView && (
                 <>
-                  <button className="absolute left-2 top-1/2 -translate-y-1/2 rounded bg-background/80 px-2 py-1 shadow" onClick={prev} aria-label="Previous">‹</button>
-                  <button className="absolute right-2 top-1/2 -translate-y-1/2 rounded bg-background/80 px-2 py-1 shadow" onClick={next} aria-label="Next">›</button>
+                  <button
+                    className="absolute left-2 top-1/2 -translate-y-1/2 rounded bg-background/80 px-2 py-1 shadow"
+                    onClick={prev}
+                    aria-label="Previous"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    className="absolute right-2 top-1/2 -translate-y-1/2 rounded bg-background/80 px-2 py-1 shadow"
+                    onClick={next}
+                    aria-label="Next"
+                  >
+                    ›
+                  </button>
                 </>
               )}
             </div>
@@ -367,7 +394,9 @@ export function renderNode(
           animationDuration: `${durationMs}ms`,
           animationDelay: `${delayMs}ms`,
           animationTimingFunction: easing,
-          animationIterationCount: infinite ? ("infinite" as any) : String(iteration),
+          animationIterationCount: infinite
+            ? ("infinite" as any)
+            : String(iteration),
           animationDirection: direction as any,
           animationFillMode: "both",
         };
@@ -403,7 +432,9 @@ export function renderNode(
             ref={ref}
             key={activeKey}
             onMouseEnter={() => trigger === "hover" && restart()}
-            className={inView || trigger === "mount" ? className : common.className}
+            className={
+              inView || trigger === "mount" ? className : common.className
+            }
             style={inView || trigger === "mount" ? commonAnimStyle : undefined}
           >
             {renderChildren(n, ctx, handlers)}
@@ -500,10 +531,19 @@ export function renderNode(
           const backend = app?.backend || { kind: "rest", baseUrl: "" };
           try {
             let url = path;
-            const baseKinds = new Set(["rest", "firebase", "supabase", "netlify", "vercel"]);
+            const baseKinds = new Set([
+              "rest",
+              "firebase",
+              "supabase",
+              "netlify",
+              "vercel",
+            ]);
             if (baseKinds.has(String(backend.kind))) {
               const base = backend.baseUrl || "";
-              url = base.endsWith("/") || path.startsWith("/") ? `${base}${path}` : `${base}/${path}`;
+              url =
+                base.endsWith("/") || path.startsWith("/")
+                  ? `${base}${path}`
+                  : `${base}/${path}`;
             }
             const res = await fetch(url, {
               method,
@@ -530,11 +570,16 @@ export function renderNode(
         const app = hist?.present;
         const cols = Number(n.props.cols || 2);
         const gridCls = `grid grid-cols-${cols} gap-4`;
-        const isField = (t: string) => ["Input", "Textarea", "Select", "Date", "Time", "Switch"].includes(t);
+        const isField = (t: string) =>
+          ["Input", "Textarea", "Select", "Date", "Time", "Switch"].includes(t);
         function renderWithLabel(child: ComponentNode) {
           const id = child.props.id || child.id;
-          const labelText = child.props.label || child.props.name || child.name || child.type;
-          const copy: ComponentNode = { ...child, props: { ...child.props, id, name: child.props.name || id } };
+          const labelText =
+            child.props.label || child.props.name || child.name || child.type;
+          const copy: ComponentNode = {
+            ...child,
+            props: { ...child.props, id, name: child.props.name || id },
+          };
           return (
             <div key={child.id} className="flex flex-col gap-1">
               <Label htmlFor={id}>{labelText}</Label>
@@ -551,10 +596,19 @@ export function renderNode(
           const backend = app?.backend || { kind: "rest", baseUrl: "" };
           try {
             let url = path;
-            const baseKinds = new Set(["rest", "firebase", "supabase", "netlify", "vercel"]);
+            const baseKinds = new Set([
+              "rest",
+              "firebase",
+              "supabase",
+              "netlify",
+              "vercel",
+            ]);
             if (baseKinds.has(String(backend.kind))) {
               const base = backend.baseUrl || "";
-              url = base.endsWith("/") || path.startsWith("/") ? `${base}${path}` : `${base}/${path}`;
+              url =
+                base.endsWith("/") || path.startsWith("/")
+                  ? `${base}${path}`
+                  : `${base}/${path}`;
             }
             const res = await fetch(url, {
               method,
@@ -570,11 +624,17 @@ export function renderNode(
         return (
           <form className={common.className} onSubmit={onSubmit}>
             <div className={gridCls}>
-              {(n.children || []).map((c) => (isField(c.type) ? renderWithLabel(c) : renderNode(c, ctx, handlers)))}
+              {(n.children || []).map((c) =>
+                isField(c.type)
+                  ? renderWithLabel(c)
+                  : renderNode(c, ctx, handlers),
+              )}
             </div>
             <div className="mt-3 flex justify-end gap-2">
               {n.props.showReset && (
-                <Button type="reset" variant="outline">{n.props.resetText || "Reset"}</Button>
+                <Button type="reset" variant="outline">
+                  {n.props.resetText || "Reset"}
+                </Button>
               )}
               <Button type="submit">{n.props.submitText || "Submit"}</Button>
             </div>
@@ -605,7 +665,8 @@ export function renderNode(
         const layout: string = n.props.layout || "top"; // 'top' | 'side' | 'floating'
         const side: string = n.props.side || "left"; // for side layout: 'left' | 'right'
         const floating: string = n.props.floating || "top-left"; // 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
-        const buttonVariant: "default" | "outline" | "secondary" = n.props.buttonVariant || "default";
+        const buttonVariant: "default" | "outline" | "secondary" =
+          n.props.buttonVariant || "default";
         const barBg: string = n.props.barBg || "bg-background/70"; // can be 'bg-background/70' | 'bg-secondary' | 'bg-transparent'
         const barBorder: boolean = n.props.barBorder !== false;
 
@@ -613,7 +674,13 @@ export function renderNode(
 
         function NavButtons({ vertical }: { vertical: boolean }) {
           return (
-            <div className={vertical ? "flex flex-col gap-2" : `flex flex-1 flex-wrap items-center gap-2 ${justify}`}>
+            <div
+              className={
+                vertical
+                  ? "flex flex-col gap-2"
+                  : `flex flex-1 flex-wrap items-center gap-2 ${justify}`
+              }
+            >
               {pages.map((p) => (
                 <Button
                   key={p.id}
@@ -632,13 +699,20 @@ export function renderNode(
           const posCls = side === "right" ? "ml-auto" : "mr-auto";
           return (
             <div className={`flex ${posCls}`}>
-              <div className={`w-56 shrink-0 rounded-md ${barBorder ? "border" : ""} ${barBg} p-3 ${common.className || ""}`}>
-                <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Navigation</div>
+              <div
+                className={`w-56 shrink-0 rounded-md ${barBorder ? "border" : ""} ${barBg} p-3 ${common.className || ""}`}
+              >
+                <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  Navigation
+                </div>
                 <NavButtons vertical={true} />
                 {n.props.showTheme && hasDark && (
                   <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
                     <span>Dark</span>
-                    <Switch checked={canvasDark} onCheckedChange={setCanvasDark} />
+                    <Switch
+                      checked={canvasDark}
+                      onCheckedChange={setCanvasDark}
+                    />
                   </div>
                 )}
               </div>
@@ -655,7 +729,9 @@ export function renderNode(
           };
           const posCls = posMap[floating] || posMap["top-left"];
           return (
-            <div className={`${posCls} z-50 rounded-md ${barBg} ${barBorder ? "border shadow-sm" : ""} p-2 ${common.className || ""}`}>
+            <div
+              className={`${posCls} z-50 rounded-md ${barBg} ${barBorder ? "border shadow-sm" : ""} p-2 ${common.className || ""}`}
+            >
               <div className={`flex items-center gap-2 ${justify}`}>
                 {pages.map((p) => (
                   <Button
@@ -669,7 +745,10 @@ export function renderNode(
                 {n.props.showTheme && hasDark && (
                   <div className="ml-2 flex items-center gap-2 text-xs text-muted-foreground">
                     <span>Dark</span>
-                    <Switch checked={canvasDark} onCheckedChange={setCanvasDark} />
+                    <Switch
+                      checked={canvasDark}
+                      onCheckedChange={setCanvasDark}
+                    />
                   </div>
                 )}
               </div>
@@ -678,7 +757,9 @@ export function renderNode(
         }
 
         return (
-          <div className={`flex items-center gap-2 ${barBorderCls} ${barBg} px-3 py-2 ${common.className || ""}`}>
+          <div
+            className={`flex items-center gap-2 ${barBorderCls} ${barBg} px-3 py-2 ${common.className || ""}`}
+          >
             <NavButtons vertical={false} />
             {n.props.showTheme && hasDark && (
               <div className="ml-auto flex items-center gap-2 text-sm text-muted-foreground">

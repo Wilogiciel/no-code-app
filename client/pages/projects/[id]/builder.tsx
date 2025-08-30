@@ -26,7 +26,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Trash2, RotateCcw, RotateCw } from "lucide-react";
 
 function findFirstByType(
@@ -63,7 +73,8 @@ export default function BuilderPage() {
     const onError = (e: any) => {
       const msg = e?.message || e?.reason?.message || "";
       if (
-        msg === "ResizeObserver loop completed with undelivered notifications." ||
+        msg ===
+          "ResizeObserver loop completed with undelivered notifications." ||
         msg === "ResizeObserver loop limit exceeded"
       ) {
         e.preventDefault?.();
@@ -172,12 +183,26 @@ export default function BuilderPage() {
     const id = crypto.randomUUID();
     const curPage = getCurrentPage();
     const existingMenu = findFirstByType(curPage?.root as any, "Menu");
-    const menuProps = existingMenu?.props || { align: app?.nav?.align || "left", className: app?.nav?.className || "", showTheme: true };
-    const menuNode: ComponentNode = { id: useAppStore.getState().generateId("Menu"), type: "Menu", props: menuProps, children: [] };
+    const menuProps = existingMenu?.props || {
+      align: app?.nav?.align || "left",
+      className: app?.nav?.className || "",
+      showTheme: true,
+    };
+    const menuNode: ComponentNode = {
+      id: useAppStore.getState().generateId("Menu"),
+      type: "Menu",
+      props: menuProps,
+      children: [],
+    };
     const page: PageSchema = {
       id,
       name: pageName || `Page ${app?.pages.length ? app.pages.length + 1 : 1}`,
-      root: { id: useAppStore.getState().generateId("Root"), type: "Root", props: {}, children: [menuNode] },
+      root: {
+        id: useAppStore.getState().generateId("Root"),
+        type: "Root",
+        props: {},
+        children: [menuNode],
+      },
     };
     addPage(page);
     setCurrentPage(page.id);
@@ -227,7 +252,11 @@ export default function BuilderPage() {
               {(app?.pages?.length || 0) > 1 && (
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant="ghost" size="icon" aria-label={`Delete ${p.name}`}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label={`Delete ${p.name}`}
+                    >
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </AlertDialogTrigger>
@@ -235,12 +264,15 @@ export default function BuilderPage() {
                     <AlertDialogHeader>
                       <AlertDialogTitle>Delete page</AlertDialogTitle>
                       <AlertDialogDescription>
-                        This will permanently remove the page "{p.name}". This action cannot be undone.
+                        This will permanently remove the page "{p.name}". This
+                        action cannot be undone.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => removePage(p.id)}>Delete</AlertDialogAction>
+                      <AlertDialogAction onClick={() => removePage(p.id)}>
+                        Delete
+                      </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
@@ -356,14 +388,19 @@ export default function BuilderPage() {
                         <SelectItem value="top-left">top-left</SelectItem>
                         <SelectItem value="top-right">top-right</SelectItem>
                         <SelectItem value="bottom-left">bottom-left</SelectItem>
-                        <SelectItem value="bottom-right">bottom-right</SelectItem>
+                        <SelectItem value="bottom-right">
+                          bottom-right
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 )}
                 <div>
                   <Label>Active button style</Label>
-                  <Select value={navButtonVariant} onValueChange={setNavButtonVariant}>
+                  <Select
+                    value={navButtonVariant}
+                    onValueChange={setNavButtonVariant}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="style" />
                     </SelectTrigger>
@@ -381,9 +418,13 @@ export default function BuilderPage() {
                       <SelectValue placeholder="background" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="bg-background/70">background</SelectItem>
+                      <SelectItem value="bg-background/70">
+                        background
+                      </SelectItem>
                       <SelectItem value="bg-secondary">secondary</SelectItem>
-                      <SelectItem value="bg-transparent">transparent</SelectItem>
+                      <SelectItem value="bg-transparent">
+                        transparent
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

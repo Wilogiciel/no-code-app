@@ -95,7 +95,13 @@ export default function Canvas() {
 
       const target = e.target as HTMLElement | null;
       const tag = (target?.tagName || "").toLowerCase();
-      const isEditable = !!(target && ((target as any).isContentEditable || tag === "input" || tag === "textarea" || tag === "select"));
+      const isEditable = !!(
+        target &&
+        ((target as any).isContentEditable ||
+          tag === "input" ||
+          tag === "textarea" ||
+          tag === "select")
+      );
 
       if ((e.key === "Delete" || e.key === "Backspace") && sel[0]) {
         if (isEditable) return; // don't intercept text editing

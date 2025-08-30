@@ -152,7 +152,8 @@ export const useAppStore = create<AppStore>((set, get) => ({
       const used = new Set<string>();
       const gen = (type: string) => {
         if (type === "Root") {
-          const rand = () => `root-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 10)}`;
+          const rand = () =>
+            `root-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 10)}`;
           let id = rand();
           while (used.has(id)) id = rand();
           used.add(id);
@@ -438,7 +439,8 @@ export const useAppStore = create<AppStore>((set, get) => ({
       }
     }
     if (type === "Root") {
-      const rand = () => `root-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 10)}`;
+      const rand = () =>
+        `root-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 10)}`;
       let id = rand();
       while (used.has(id)) id = rand();
       return id;

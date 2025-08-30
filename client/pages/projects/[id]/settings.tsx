@@ -4,7 +4,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function ProjectSettings() {
   const { id } = useParams();
@@ -181,21 +187,35 @@ export default function ProjectSettings() {
           <CardContent className="space-y-3">
             <div>
               <Label>Provider</Label>
-              <Select value={backendKind} onValueChange={(v: any) => setBackendKind(v)}>
-                <SelectTrigger><SelectValue placeholder="provider" /></SelectTrigger>
+              <Select
+                value={backendKind}
+                onValueChange={(v: any) => setBackendKind(v)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="provider" />
+                </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="rest">REST (Base URL)</SelectItem>
-                  <SelectItem value="webhook">Webhook (full URL set per form)</SelectItem>
+                  <SelectItem value="webhook">
+                    Webhook (full URL set per form)
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
             {backendKind === "rest" && (
               <div>
                 <Label htmlFor="base">Base URL</Label>
-                <Input id="base" placeholder="https://api.example.com" value={backendBaseUrl} onChange={(e) => setBackendBaseUrl(e.target.value)} />
+                <Input
+                  id="base"
+                  placeholder="https://api.example.com"
+                  value={backendBaseUrl}
+                  onChange={(e) => setBackendBaseUrl(e.target.value)}
+                />
               </div>
             )}
-            <Button variant="outline" onClick={save}>Save</Button>
+            <Button variant="outline" onClick={save}>
+              Save
+            </Button>
           </CardContent>
         </Card>
       </div>

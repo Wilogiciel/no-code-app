@@ -80,7 +80,15 @@ export const CATALOG: CatalogItem[] = [
     type: "Slide",
     title: "Slide (Carousel)",
     category: "Layout",
-    defaults: { itemsPerView: 1, gap: "4", showArrows: true, showDots: true, autoplay: false, autoplayMs: 3000, loop: true },
+    defaults: {
+      itemsPerView: 1,
+      gap: "4",
+      showArrows: true,
+      showDots: true,
+      autoplay: false,
+      autoplayMs: 3000,
+      loop: true,
+    },
   },
   {
     type: "Tabs",
@@ -141,8 +149,26 @@ export const CATALOG: CatalogItem[] = [
     defaults: { src: "https://picsum.photos/400/200", alt: "Image" },
   },
   { type: "Separator", title: "Separator", category: "Layout", defaults: {} },
-  { type: "Forms", title: "Forms (Form Layout)", category: "Layout", defaults: { cols: 2, path: "/submit", method: "POST", showReset: false, submitText: "Submit", resetText: "Reset", className: "space-y-4" } },
-  { type: "Form", title: "Form", category: "Forms", defaults: { path: "/submit", method: "POST", className: "space-y-3" } },
+  {
+    type: "Forms",
+    title: "Forms (Form Layout)",
+    category: "Layout",
+    defaults: {
+      cols: 2,
+      path: "/submit",
+      method: "POST",
+      showReset: false,
+      submitText: "Submit",
+      resetText: "Reset",
+      className: "space-y-4",
+    },
+  },
+  {
+    type: "Form",
+    title: "Form",
+    category: "Forms",
+    defaults: { path: "/submit", method: "POST", className: "space-y-3" },
+  },
 ];
 
 export const CATEGORIES = Array.from(new Set(CATALOG.map((c) => c.category)));

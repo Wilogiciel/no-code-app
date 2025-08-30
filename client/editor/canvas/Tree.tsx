@@ -40,12 +40,20 @@ function NodeItem({ id, level }: { id: string; level: number }) {
   const dropId = `drop:${id}`;
   const canDrop = CONTAINERS.has(node.type);
   const { setNodeRef: setDropRef, isOver } = useDroppable({ id: dropId });
-  const { attributes, listeners, setNodeRef: setDragRef } = useDraggable({ id: `move:${id}`, data: { moveId: id } });
+  const {
+    attributes,
+    listeners,
+    setNodeRef: setDragRef,
+  } = useDraggable({ id: `move:${id}`, data: { moveId: id } });
 
   return (
     <div
       ref={canDrop ? setDropRef : undefined}
-      className={cn("flex items-center justify-between text-xs rounded", level > 0 && "pl-2", isOver && "bg-accent/50")}
+      className={cn(
+        "flex items-center justify-between text-xs rounded",
+        level > 0 && "pl-2",
+        isOver && "bg-accent/50",
+      )}
     >
       <button
         ref={setDragRef as any}
@@ -72,7 +80,11 @@ function NodeItem({ id, level }: { id: string; level: number }) {
   );
 }
 
-function renderIds(n: any, level: number, acc: JSX.Element[] = []): JSX.Element[] {
+function renderIds(
+  n: any,
+  level: number,
+  acc: JSX.Element[] = [],
+): JSX.Element[] {
   acc.push(<NodeItem key={n.id} id={n.id} level={level} />);
   for (const c of n.children || []) renderIds(c, level + 1, acc);
   return acc;
@@ -83,7 +95,9 @@ export default function Tree() {
   if (!page) return null;
   return (
     <div className="rounded-md border bg-background/80 p-2 shadow-sm">
-      <div className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Hierarchy</div>
+      <div className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+        Hierarchy
+      </div>
       <div className="max-h-64 w-56 overflow-auto pr-1">
         {renderIds(page.root, 0)}
       </div>
