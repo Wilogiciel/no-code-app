@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Trash2 } from "lucide-react";
+import { Trash2, RotateCcw, RotateCw } from "lucide-react";
 
 function findFirstByType(
   n: ComponentNode | null | undefined,
@@ -59,6 +59,10 @@ export default function BuilderPage() {
   }, [save]);
 
   const hist = useAppStore((s) => s.history);
+  const doUndo = useAppStore((s) => s.undo);
+  const doRedo = useAppStore((s) => s.redo);
+  const canUndo = (hist?.past.length || 0) > 0;
+  const canRedo = (hist?.future.length || 0) > 0;
 
   function handleDrop(e: DragEndEvent) {
     const data = e.active.data.current as any;
@@ -234,7 +238,27 @@ export default function BuilderPage() {
             </DialogContent>
           </Dialog>
         </div>
-        <div className="ml-auto">
+        <div className="ml-auto flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={doUndo}
+            disabled={!canUndo}
+            aria-label="Undo (Ctrl/Cmd+Z)"
+            title="Undo (Ctrl/Cmd+Z)"
+          >
+            <RotateCcw className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={doRedo}
+            disabled={!canRedo}
+            aria-label="Redo (Ctrl/Cmd+Shift+Z or Ctrl/Cmd+Y)"
+            title="Redo (Ctrl/Cmd+Shift+Z or Ctrl/Cmd+Y)"
+          >
+            <RotateCw className="h-4 w-4" />
+          </Button>
           <Dialog open={openNav} onOpenChange={setOpenNav}>
             <DialogTrigger asChild>
               <Button variant="outline">Nav settings</Button>
