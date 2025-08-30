@@ -15,6 +15,16 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 
+function findFirstByType(n: ComponentNode | null | undefined, type: string): ComponentNode | null {
+  if (!n) return null;
+  if (n.type === type) return n;
+  for (const c of n.children || []) {
+    const f = findFirstByType(c, type);
+    if (f) return f;
+  }
+  return null;
+}
+
 export default function BuilderPage() {
   const { id } = useParams();
   const load = useAppStore((s) => s.loadApp);
@@ -81,13 +91,28 @@ export default function BuilderPage() {
   const empty = !hist?.present.pages[0].root.children?.length;
   const setCurrentPage = useAppStore((s) => s.setCurrentPage);
   const updateApp = useAppStore((s) => s.updateApp);
+  const updateProps = useAppStore((s) => s.updateProps);
   const addPage = useAppStore((s) => s.addPage);
   const app = hist?.present;
   const [openNewPage, setOpenNewPage] = useState(false);
   const [openNav, setOpenNav] = useState(false);
   const [pageName, setPageName] = useState("");
-  const [navAlign, setNavAlign] = useState(app?.nav?.align || "left");
-  const [navClass, setNavClass] = useState(app?.nav?.className || "");
+  const [menuId, setMenuId] = useState<string | null>(null);
+  const [navAlign, setNavAlign] = useState("left");
+  const [navClass, setNavClass] = useState("");
+  const [showTheme, setShowTheme] = useState(true);
+
+  useEffect(() => {
+    if (!openNav) return;
+    const page = getCurrentPage();
+    const menu = findFirstByType(page?.root as any, "Menu");
+    if (menu) {
+      setMenuId(menu.id);
+      setNavAlign(menu.props?.align || "left");
+      setNavClass(menu.props?.className || "");
+      setShowTheme(menu.props?.showTheme !== false);
+    }
+  }, [openNav, hist]);
 
   function createPage() {
     const id = crypto.randomUUID();
@@ -99,6 +124,10 @@ export default function BuilderPage() {
   }
 
   function saveNav() {
+    if (menuId) {
+      updateProps(menuId, { align: navAlign as any, className: navClass, showTheme });
+    }
+    // Keep builder top bar in sync visually
     updateApp({ nav: { align: navAlign as any, className: navClass } });
     setOpenNav(false);
   }
@@ -147,6 +176,10 @@ export default function BuilderPage() {
                 <div>
                   <Label>Extra classes</Label>
                   <Input value={navClass} onChange={(e) => setNavClass(e.target.value)} placeholder="e.g. bg-muted/50 backdrop-blur" />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label>Show dark mode switch in menu</Label>
+                  <Switch checked={showTheme} onCheckedChange={setShowTheme} disabled={!(app?.theme?.darkPrimary && app?.theme?.darkSecondary)} />
                 </div>
                 <div className="flex justify-end gap-2 pt-2">
                   <Button variant="outline" onClick={() => setOpenNav(false)}>Cancel</Button>
