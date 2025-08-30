@@ -57,7 +57,7 @@ export default function ProjectsIndex() {
       darkPrimary: hexToHslString(darkPrimaryHex),
       darkSecondary: hexToHslString(darkSecondaryHex),
     };
-    const app = { id, name, pages: [{ id: crypto.randomUUID(), name: "Home", root: { id: crypto.randomUUID(), type: "Root", props: {}, children: [] } }], variables: [], dataSources: [], theme };
+    const app = { id, name, pages: [{ id: crypto.randomUUID(), name: "Home", root: { id: crypto.randomUUID(), type: "Root", props: {}, children: [ { id: crypto.randomUUID(), type: "Menu", props: { align: "left", showTheme: true }, children: [] } ] } }], variables: [], dataSources: [], theme };
     localStorage.setItem(`app:${id}`, JSON.stringify(app));
     setItems(listProjects());
     setOpen(false);
