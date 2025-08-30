@@ -9,6 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { evalTemplate } from "@/editor/runtime/evalExpr";
 import { Separator } from "@/components/ui/separator";
@@ -33,6 +34,10 @@ export function renderNode(n: ComponentNode, ctx: any, handlers: Record<string, 
       }}>{n.props.text || "Button"}</Button>;
     case "Input":
       return <Input {...common} placeholder={n.props.placeholder} />;
+    case "Date":
+      return <Input {...common} type="date" />;
+    case "Time":
+      return <Input {...common} type="time" />;
     case "Textarea":
       return <Textarea {...common} placeholder={n.props.placeholder} />;
     case "Select": {
@@ -131,6 +136,21 @@ export function renderNode(n: ComponentNode, ctx: any, handlers: Record<string, 
       return <Badge className={common.className} variant={n.props.variant as any}>{n.props.text || "Badge"}</Badge>;
     case "Image":
       return <img className={common.className} src={n.props.src} alt={n.props.alt || ""} />;
+    case "Dialog":
+      return (
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button className={common.className} variant="outline">{n.props.triggerText || "Open Dialog"}</Button>
+          </DialogTrigger>
+          <DialogContent>
+            {n.props.title && <DialogTitle>{n.props.title}</DialogTitle>}
+            {n.props.description && (
+              <DialogDescription>{n.props.description}</DialogDescription>
+            )}
+            <div className="mt-2">{renderChildren(n, ctx, handlers)}</div>
+          </DialogContent>
+        </Dialog>
+      );
     default:
       return <div className="text-xs text-muted-foreground">Unsupported: {n.type}</div>;
   }
