@@ -118,6 +118,7 @@ export const CATALOG: CatalogItem[] = [
     defaults: { src: "https://picsum.photos/400/200", alt: "Image" },
   },
   { type: "Separator", title: "Separator", category: "Layout", defaults: {} },
+  { type: "Form", title: "Form", category: "Forms", defaults: { path: "/submit", method: "POST", className: "space-y-3" } },
 ];
 
 export const CATEGORIES = Array.from(new Set(CATALOG.map((c) => c.category)));
