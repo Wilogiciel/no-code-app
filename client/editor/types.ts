@@ -9,7 +9,11 @@ export type WorkflowAction =
       bodyExpr?: string;
       assignToVar?: string;
     }
-  | { type: "toast"; messageExpr: string; variant?: "success" | "error" | "info" }
+  | {
+      type: "toast";
+      messageExpr: string;
+      variant?: "success" | "error" | "info";
+    }
   | { type: "openDialog"; dialogId: string }
   | { type: "closeDialog"; dialogId: string };
 
@@ -33,7 +37,13 @@ export type ComponentNode = {
 export type PageSchema = { id: string; name: string; root: ComponentNode };
 
 export type DataSource =
-  | { id: string; kind: "rest"; name: string; baseUrl: string; headers?: Record<string, string> }
+  | {
+      id: string;
+      kind: "rest";
+      name: string;
+      baseUrl: string;
+      headers?: Record<string, string>;
+    }
   | { id: string; kind: "static"; name: string; data: any };
 
 export type VariableDef = {

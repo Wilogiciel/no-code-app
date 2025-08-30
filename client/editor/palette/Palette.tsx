@@ -1,15 +1,34 @@
 import { CATALOG, CATEGORIES } from "@/editor/components-catalog/catalog";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Command,
+  CommandEmpty,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useMemo, useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { useAppStore, getCurrentPage } from "@/editor/store/appStore";
 import { ComponentNode } from "@/editor/types";
 
 function DraggableItem({ type, title }: { type: string; title: string }) {
-  const { attributes, listeners, setNodeRef } = useDraggable({ id: `palette:${type}`, data: { type } });
+  const { attributes, listeners, setNodeRef } = useDraggable({
+    id: `palette:${type}`,
+    data: { type },
+  });
   const addNode = useAppStore((s) => s.addNode);
   const setSel = useAppStore((s) => s.setSelection);
   function handleClick() {
@@ -17,11 +36,28 @@ function DraggableItem({ type, title }: { type: string; title: string }) {
     const catalog = CATALOG.find((c) => c.type === type);
     if (!page) return;
     const selected = useAppStore.getState().selection[0];
-    const CONTAINERS = new Set(["Row", "Column", "Grid", "Card", "Dialog", "Sheet", "Drawer"]);
+    const CONTAINERS = new Set([
+      "Row",
+      "Column",
+      "Grid",
+      "Card",
+      "Dialog",
+      "Sheet",
+      "Drawer",
+    ]);
     const targetId = (() => {
       if (!selected) return page.root.id;
-      const selectedNode = (function find(n: any): any { if (n.id===selected) return n; for (const c of n.children||[]) { const f=find(c); if (f) return f; } return null; })(page.root);
-      return selectedNode && CONTAINERS.has(selectedNode.type) ? selectedNode.id : page.root.id;
+      const selectedNode = (function find(n: any): any {
+        if (n.id === selected) return n;
+        for (const c of n.children || []) {
+          const f = find(c);
+          if (f) return f;
+        }
+        return null;
+      })(page.root);
+      return selectedNode && CONTAINERS.has(selectedNode.type)
+        ? selectedNode.id
+        : page.root.id;
     })();
     const node: ComponentNode = {
       id: crypto.randomUUID(),
@@ -34,7 +70,13 @@ function DraggableItem({ type, title }: { type: string; title: string }) {
     setSel([node.id]);
   }
   return (
-    <div ref={setNodeRef} {...listeners} {...attributes} onClick={handleClick} className="flex cursor-grab items-center justify-between rounded-md border p-2 text-sm hover:bg-accent">
+    <div
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+      onClick={handleClick}
+      className="flex cursor-grab items-center justify-between rounded-md border p-2 text-sm hover:bg-accent"
+    >
       <span>{title}</span>
       <span className="text-xs text-muted-foreground">drag • click</span>
     </div>
@@ -43,12 +85,20 @@ function DraggableItem({ type, title }: { type: string; title: string }) {
 
 export default function Palette() {
   const [q, setQ] = useState("");
-  const items = useMemo(() => CATALOG.filter((i) => i.title.toLowerCase().includes(q.toLowerCase())), [q]);
+  const items = useMemo(
+    () =>
+      CATALOG.filter((i) => i.title.toLowerCase().includes(q.toLowerCase())),
+    [q],
+  );
   return (
     <div className="flex h-full flex-col border-r">
       <div className="p-2">
         <Command>
-          <CommandInput placeholder="Search components..." value={q} onValueChange={setQ} />
+          <CommandInput
+            placeholder="Search components..."
+            value={q}
+            onValueChange={setQ}
+          />
           <CommandList>
             <CommandEmpty>No results</CommandEmpty>
             {items.map((i) => (

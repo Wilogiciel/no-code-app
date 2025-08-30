@@ -9,9 +9,14 @@ import Tree from "@/editor/canvas/Tree";
 function DropArea({ children }: { children?: React.ReactNode }) {
   const { setNodeRef, isOver } = useDroppable({ id: "canvas" });
   return (
-    <div ref={setNodeRef} className="min-h-[600px] rounded-lg border bg-background p-6">
+    <div
+      ref={setNodeRef}
+      className="min-h-[600px] rounded-lg border bg-background p-6"
+    >
       <div className="text-sm text-muted-foreground">Drop components here</div>
-      {isOver && <div className="mt-2 rounded border-2 border-dashed border-primary/50 p-6" />}
+      {isOver && (
+        <div className="mt-2 rounded border-2 border-dashed border-primary/50 p-6" />
+      )}
       <div className="mt-4 space-y-3">{children}</div>
     </div>
   );
@@ -20,16 +25,35 @@ function DropArea({ children }: { children?: React.ReactNode }) {
 function DropSlot({ index }: { index: number }) {
   const { setNodeRef, isOver } = useDroppable({ id: `slot:root:${index}` });
   return (
-    <div ref={setNodeRef} className={cn("h-3 transition-colors", isOver && "h-6 rounded border-2 border-dashed border-primary/50")}></div>
+    <div
+      ref={setNodeRef}
+      className={cn(
+        "h-3 transition-colors",
+        isOver && "h-6 rounded border-2 border-dashed border-primary/50",
+      )}
+    ></div>
   );
 }
 
-const CONTAINERS = new Set(["Row", "Column", "Grid", "Card", "Dialog", "Sheet", "Drawer"]);
+const CONTAINERS = new Set([
+  "Row",
+  "Column",
+  "Grid",
+  "Card",
+  "Dialog",
+  "Sheet",
+  "Drawer",
+]);
 
 function NodeWrapper({ n, selected, onSelect }: any) {
   const dropId = `drop:${n.id}`;
   const { setNodeRef, isOver } = useDroppable({ id: dropId });
-  const { attributes, listeners, setNodeRef: setDragRef, isDragging } = useDraggable({ id: `move:${n.id}`, data: { moveId: n.id } });
+  const {
+    attributes,
+    listeners,
+    setNodeRef: setDragRef,
+    isDragging,
+  } = useDraggable({ id: `move:${n.id}`, data: { moveId: n.id } });
   return (
     <div
       ref={(el) => {
@@ -47,7 +71,9 @@ function NodeWrapper({ n, selected, onSelect }: any) {
       onClick={() => onSelect(n.id)}
     >
       <div className="pointer-events-none">{renderNode(n, {}, {})}</div>
-      {isOver && <div className="mt-2 text-xs text-primary">Drop inside {n.type}</div>}
+      {isOver && (
+        <div className="mt-2 text-xs text-primary">Drop inside {n.type}</div>
+      )}
     </div>
   );
 }
@@ -73,11 +99,16 @@ export default function Canvas() {
     return () => window.removeEventListener("keydown", onKey);
   }, [setSel, sel, remove]);
 
-  const primary = canvasDark ? (app?.theme?.darkPrimary || app?.theme?.primary) : app?.theme?.primary;
-  const secondary = canvasDark ? (app?.theme?.darkSecondary || app?.theme?.secondary) : app?.theme?.secondary;
+  const primary = canvasDark
+    ? app?.theme?.darkPrimary || app?.theme?.primary
+    : app?.theme?.primary;
+  const secondary = canvasDark
+    ? app?.theme?.darkSecondary || app?.theme?.secondary
+    : app?.theme?.secondary;
 
   return (
-    <div className={cn(canvasDark && "dark")}
+    <div
+      className={cn(canvasDark && "dark")}
       style={{
         // Apply theme only within canvas wrapper
         ["--primary" as any]: primary || "258 85% 58%",
@@ -90,7 +121,11 @@ export default function Canvas() {
           <DropSlot index={0} />
           {(page?.root.children || []).map((n, i) => (
             <div key={n.id}>
-              <NodeWrapper n={n} selected={sel.includes(n.id)} onSelect={(id: string) => setSel([id])} />
+              <NodeWrapper
+                n={n}
+                selected={sel.includes(n.id)}
+                onSelect={(id: string) => setSel([id])}
+              />
               <DropSlot index={i + 1} />
             </div>
           ))}

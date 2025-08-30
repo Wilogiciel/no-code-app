@@ -3,8 +3,21 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from "@/components/ui/table";
 
 function listProjects() {
   const apps: { id: string; name: string }[] = [];
@@ -26,7 +39,9 @@ export default function ProjectsIndex() {
   const [secondaryHex, setSecondaryHex] = useState("#EEF2F7");
   const [darkPrimaryHex, setDarkPrimaryHex] = useState("#A78BFA");
   const [darkSecondaryHex, setDarkSecondaryHex] = useState("#1F2937");
-  useEffect(() => { setItems(listProjects()); }, []);
+  useEffect(() => {
+    setItems(listProjects());
+  }, []);
 
   function hexToHslString(hex: string): string {
     const res = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i.exec(hex.trim());
@@ -34,15 +49,24 @@ export default function ProjectsIndex() {
     const r = parseInt(res[1], 16) / 255;
     const g = parseInt(res[2], 16) / 255;
     const b = parseInt(res[3], 16) / 255;
-    const max = Math.max(r, g, b), min = Math.min(r, g, b);
-    let h = 0, s = 0, l = (max + min) / 2;
+    const max = Math.max(r, g, b),
+      min = Math.min(r, g, b);
+    let h = 0,
+      s = 0,
+      l = (max + min) / 2;
     if (max !== min) {
       const d = max - min;
       s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
       switch (max) {
-        case r: h = (g - b) / d + (g < b ? 6 : 1); break;
-        case g: h = (b - r) / d + 3; break;
-        case b: h = (r - g) / d + 5; break;
+        case r:
+          h = (g - b) / d + (g < b ? 6 : 1);
+          break;
+        case g:
+          h = (b - r) / d + 3;
+          break;
+        case b:
+          h = (r - g) / d + 5;
+          break;
       }
       h /= 6;
     }
@@ -57,7 +81,32 @@ export default function ProjectsIndex() {
       darkPrimary: hexToHslString(darkPrimaryHex),
       darkSecondary: hexToHslString(darkSecondaryHex),
     };
-    const app = { id, name, pages: [{ id: crypto.randomUUID(), name: "Home", root: { id: crypto.randomUUID(), type: "Root", props: {}, children: [ { id: crypto.randomUUID(), type: "Menu", props: { align: "left", showTheme: true }, children: [] } ] } }], variables: [], dataSources: [], theme };
+    const app = {
+      id,
+      name,
+      pages: [
+        {
+          id: crypto.randomUUID(),
+          name: "Home",
+          root: {
+            id: crypto.randomUUID(),
+            type: "Root",
+            props: {},
+            children: [
+              {
+                id: crypto.randomUUID(),
+                type: "Menu",
+                props: { align: "left", showTheme: true },
+                children: [],
+              },
+            ],
+          },
+        },
+      ],
+      variables: [],
+      dataSources: [],
+      theme,
+    };
     localStorage.setItem(`app:${id}`, JSON.stringify(app));
     setItems(listProjects());
     setOpen(false);
@@ -68,7 +117,9 @@ export default function ProjectsIndex() {
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Projects</h1>
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild><Button>New Project</Button></DialogTrigger>
+          <DialogTrigger asChild>
+            <Button>New Project</Button>
+          </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Create project</DialogTitle>
@@ -76,40 +127,78 @@ export default function ProjectsIndex() {
             <div className="space-y-4">
               <div>
                 <Label htmlFor="name">Name</Label>
-                <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
+                <Input
+                  id="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="primary">Primary color</Label>
                   <div className="flex items-center gap-2">
-                    <input id="primary" type="color" value={primaryHex} onChange={(e) => setPrimaryHex(e.target.value)} />
-                    <Input value={primaryHex} onChange={(e) => setPrimaryHex(e.target.value)} />
+                    <input
+                      id="primary"
+                      type="color"
+                      value={primaryHex}
+                      onChange={(e) => setPrimaryHex(e.target.value)}
+                    />
+                    <Input
+                      value={primaryHex}
+                      onChange={(e) => setPrimaryHex(e.target.value)}
+                    />
                   </div>
                 </div>
                 <div>
                   <Label htmlFor="secondary">Secondary color</Label>
                   <div className="flex items-center gap-2">
-                    <input id="secondary" type="color" value={secondaryHex} onChange={(e) => setSecondaryHex(e.target.value)} />
-                    <Input value={secondaryHex} onChange={(e) => setSecondaryHex(e.target.value)} />
+                    <input
+                      id="secondary"
+                      type="color"
+                      value={secondaryHex}
+                      onChange={(e) => setSecondaryHex(e.target.value)}
+                    />
+                    <Input
+                      value={secondaryHex}
+                      onChange={(e) => setSecondaryHex(e.target.value)}
+                    />
                   </div>
                 </div>
                 <div>
                   <Label htmlFor="darkPrimary">Dark primary</Label>
                   <div className="flex items-center gap-2">
-                    <input id="darkPrimary" type="color" value={darkPrimaryHex} onChange={(e) => setDarkPrimaryHex(e.target.value)} />
-                    <Input value={darkPrimaryHex} onChange={(e) => setDarkPrimaryHex(e.target.value)} />
+                    <input
+                      id="darkPrimary"
+                      type="color"
+                      value={darkPrimaryHex}
+                      onChange={(e) => setDarkPrimaryHex(e.target.value)}
+                    />
+                    <Input
+                      value={darkPrimaryHex}
+                      onChange={(e) => setDarkPrimaryHex(e.target.value)}
+                    />
                   </div>
                 </div>
                 <div>
                   <Label htmlFor="darkSecondary">Dark secondary</Label>
                   <div className="flex items-center gap-2">
-                    <input id="darkSecondary" type="color" value={darkSecondaryHex} onChange={(e) => setDarkSecondaryHex(e.target.value)} />
-                    <Input value={darkSecondaryHex} onChange={(e) => setDarkSecondaryHex(e.target.value)} />
+                    <input
+                      id="darkSecondary"
+                      type="color"
+                      value={darkSecondaryHex}
+                      onChange={(e) => setDarkSecondaryHex(e.target.value)}
+                    />
+                    <Input
+                      value={darkSecondaryHex}
+                      onChange={(e) => setDarkSecondaryHex(e.target.value)}
+                    />
                   </div>
                 </div>
               </div>
               <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+                <Button variant="outline" onClick={() => setOpen(false)}>
+                  Cancel
+                </Button>
                 <Button onClick={createWithTheme}>Create</Button>
               </div>
             </div>
@@ -131,7 +220,9 @@ export default function ProjectsIndex() {
                 <TableCell>{p.name}</TableCell>
                 <TableCell className="font-mono text-xs">{p.id}</TableCell>
                 <TableCell className="text-right">
-                  <Button variant="outline" asChild><Link to={`/projects/${p.id}/builder`}>Open</Link></Button>
+                  <Button variant="outline" asChild>
+                    <Link to={`/projects/${p.id}/builder`}>Open</Link>
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}

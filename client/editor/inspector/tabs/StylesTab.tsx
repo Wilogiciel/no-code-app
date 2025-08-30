@@ -2,7 +2,13 @@ import { useAppStore, getNodeById } from "@/editor/store/appStore";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 function mergeClass(base: string, add: string, remove: string[]): string {
   const parts = new Set((base || "").split(/\s+/).filter(Boolean));
@@ -15,7 +21,10 @@ export default function StylesTab() {
   const sel = useAppStore((s) => s.selection);
   const node = sel[0] ? getNodeById(sel[0]) : null;
   const update = useAppStore((s) => s.updateProps);
-  if (!node) return <div className="text-sm text-muted-foreground">Select a component</div>;
+  if (!node)
+    return (
+      <div className="text-sm text-muted-foreground">Select a component</div>
+    );
 
   const cls = node.props.className || "";
   function set(add: string, remove: string[]) {
@@ -27,14 +36,33 @@ export default function StylesTab() {
       <div>
         <Label>Border</Label>
         <div className="flex items-center gap-2">
-          <Switch checked={/\bborder\b/.test(cls)} onCheckedChange={(v) => set(v ? "border" : "", ["border", "border-0"])} />
+          <Switch
+            checked={/\bborder\b/.test(cls)}
+            onCheckedChange={(v) =>
+              set(v ? "border" : "", ["border", "border-0"])
+            }
+          />
           <span className="text-sm text-muted-foreground">Show border</span>
         </div>
       </div>
       <div>
         <Label>Radius</Label>
-        <Select onValueChange={(v) => set(v, ["rounded-none","rounded","rounded-sm","rounded-md","rounded-lg","rounded-xl","rounded-2xl"]) }>
-          <SelectTrigger><SelectValue placeholder="rounded" /></SelectTrigger>
+        <Select
+          onValueChange={(v) =>
+            set(v, [
+              "rounded-none",
+              "rounded",
+              "rounded-sm",
+              "rounded-md",
+              "rounded-lg",
+              "rounded-xl",
+              "rounded-2xl",
+            ])
+          }
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="rounded" />
+          </SelectTrigger>
           <SelectContent>
             <SelectItem value="rounded-none">none</SelectItem>
             <SelectItem value="rounded-sm">sm</SelectItem>
@@ -48,8 +76,20 @@ export default function StylesTab() {
       </div>
       <div>
         <Label>Shadow</Label>
-        <Select onValueChange={(v) => set(v, ["shadow-none","shadow-sm","shadow","shadow-md","shadow-lg"]) }>
-          <SelectTrigger><SelectValue placeholder="shadow" /></SelectTrigger>
+        <Select
+          onValueChange={(v) =>
+            set(v, [
+              "shadow-none",
+              "shadow-sm",
+              "shadow",
+              "shadow-md",
+              "shadow-lg",
+            ])
+          }
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="shadow" />
+          </SelectTrigger>
           <SelectContent>
             <SelectItem value="shadow-none">none</SelectItem>
             <SelectItem value="shadow-sm">sm</SelectItem>
@@ -61,8 +101,22 @@ export default function StylesTab() {
       </div>
       <div>
         <Label>Text color</Label>
-        <Select onValueChange={(v) => set(v, ["text-foreground","text-muted-foreground","text-primary","text-secondary","text-destructive","text-white","text-black"]) }>
-          <SelectTrigger><SelectValue placeholder="text color" /></SelectTrigger>
+        <Select
+          onValueChange={(v) =>
+            set(v, [
+              "text-foreground",
+              "text-muted-foreground",
+              "text-primary",
+              "text-secondary",
+              "text-destructive",
+              "text-white",
+              "text-black",
+            ])
+          }
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="text color" />
+          </SelectTrigger>
           <SelectContent>
             <SelectItem value="text-foreground">foreground</SelectItem>
             <SelectItem value="text-muted-foreground">muted</SelectItem>
@@ -76,8 +130,23 @@ export default function StylesTab() {
       </div>
       <div>
         <Label>Background</Label>
-        <Select onValueChange={(v) => set(v, ["bg-transparent","bg-background","bg-muted","bg-primary","bg-secondary","bg-destructive","bg-white","bg-black"]) }>
-          <SelectTrigger><SelectValue placeholder="background" /></SelectTrigger>
+        <Select
+          onValueChange={(v) =>
+            set(v, [
+              "bg-transparent",
+              "bg-background",
+              "bg-muted",
+              "bg-primary",
+              "bg-secondary",
+              "bg-destructive",
+              "bg-white",
+              "bg-black",
+            ])
+          }
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="background" />
+          </SelectTrigger>
           <SelectContent>
             <SelectItem value="bg-transparent">transparent</SelectItem>
             <SelectItem value="bg-background">background</SelectItem>
@@ -93,8 +162,25 @@ export default function StylesTab() {
       <div className="grid grid-cols-2 gap-2">
         <div>
           <Label>Width</Label>
-          <Select onValueChange={(v) => set(v, ["w-auto","w-full","w-1/2","w-1/3","w-2/3","w-1/4","w-3/4","w-64","w-80","w-96"]) }>
-            <SelectTrigger><SelectValue placeholder="width" /></SelectTrigger>
+          <Select
+            onValueChange={(v) =>
+              set(v, [
+                "w-auto",
+                "w-full",
+                "w-1/2",
+                "w-1/3",
+                "w-2/3",
+                "w-1/4",
+                "w-3/4",
+                "w-64",
+                "w-80",
+                "w-96",
+              ])
+            }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="width" />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="w-auto">auto</SelectItem>
               <SelectItem value="w-full">full</SelectItem>
@@ -111,8 +197,22 @@ export default function StylesTab() {
         </div>
         <div>
           <Label>Height</Label>
-          <Select onValueChange={(v) => set(v, ["h-auto","h-full","h-32","h-48","h-64","h-80","h-96"]) }>
-            <SelectTrigger><SelectValue placeholder="height" /></SelectTrigger>
+          <Select
+            onValueChange={(v) =>
+              set(v, [
+                "h-auto",
+                "h-full",
+                "h-32",
+                "h-48",
+                "h-64",
+                "h-80",
+                "h-96",
+              ])
+            }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="height" />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="h-auto">auto</SelectItem>
               <SelectItem value="h-full">full</SelectItem>
@@ -128,8 +228,14 @@ export default function StylesTab() {
       <div className="grid grid-cols-2 gap-2">
         <div>
           <Label>Border width</Label>
-          <Select onValueChange={(v) => set(v, ["border-0","border","border-2","border-4"]) }>
-            <SelectTrigger><SelectValue placeholder="border" /></SelectTrigger>
+          <Select
+            onValueChange={(v) =>
+              set(v, ["border-0", "border", "border-2", "border-4"])
+            }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="border" />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="border-0">0</SelectItem>
               <SelectItem value="border">1</SelectItem>
@@ -140,8 +246,22 @@ export default function StylesTab() {
         </div>
         <div>
           <Label>Border color</Label>
-          <Select onValueChange={(v) => set(v, ["border-border","border-primary","border-secondary","border-destructive","border-muted","border-white","border-black"]) }>
-            <SelectTrigger><SelectValue placeholder="border color" /></SelectTrigger>
+          <Select
+            onValueChange={(v) =>
+              set(v, [
+                "border-border",
+                "border-primary",
+                "border-secondary",
+                "border-destructive",
+                "border-muted",
+                "border-white",
+                "border-black",
+              ])
+            }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="border color" />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="border-border">default</SelectItem>
               <SelectItem value="border-primary">primary</SelectItem>
@@ -157,8 +277,14 @@ export default function StylesTab() {
       <div className="grid grid-cols-2 gap-2">
         <div>
           <Label>Text align</Label>
-          <Select onValueChange={(v) => set(v, ["text-left","text-center","text-right","text-justify"]) }>
-            <SelectTrigger><SelectValue placeholder="text-left" /></SelectTrigger>
+          <Select
+            onValueChange={(v) =>
+              set(v, ["text-left", "text-center", "text-right", "text-justify"])
+            }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="text-left" />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="text-left">left</SelectItem>
               <SelectItem value="text-center">center</SelectItem>
@@ -169,8 +295,22 @@ export default function StylesTab() {
         </div>
         <div>
           <Label>Font size</Label>
-          <Select onValueChange={(v) => set(v, ["text-xs","text-sm","text-base","text-lg","text-xl","text-2xl","text-3xl"]) }>
-            <SelectTrigger><SelectValue placeholder="text-base" /></SelectTrigger>
+          <Select
+            onValueChange={(v) =>
+              set(v, [
+                "text-xs",
+                "text-sm",
+                "text-base",
+                "text-lg",
+                "text-xl",
+                "text-2xl",
+                "text-3xl",
+              ])
+            }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="text-base" />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="text-xs">xs</SelectItem>
               <SelectItem value="text-sm">sm</SelectItem>
@@ -185,23 +325,46 @@ export default function StylesTab() {
       </div>
       <div>
         <Label>Margin</Label>
-        <Input placeholder="e.g. m-4 mx-2" value={cls.split(" ").filter((x)=>/^m[trblxy]?-/.test(x)).join(" ")}
+        <Input
+          placeholder="e.g. m-4 mx-2"
+          value={cls
+            .split(" ")
+            .filter((x) => /^m[trblxy]?-/.test(x))
+            .join(" ")}
           onChange={(e) => {
-            const tokens = cls.split(" ").filter((x)=>!/^[m][trblxy]?-/.test(x));
-            update(node.id, { className: [...tokens, e.target.value].join(" ") });
-          }} />
+            const tokens = cls
+              .split(" ")
+              .filter((x) => !/^[m][trblxy]?-/.test(x));
+            update(node.id, {
+              className: [...tokens, e.target.value].join(" "),
+            });
+          }}
+        />
       </div>
       <div>
         <Label>Padding</Label>
-        <Input placeholder="e.g. p-4 px-6" value={cls.split(" ").filter((x)=>/^p[trblxy]?-[0-9]+$/.test(x)).join(" ")}
+        <Input
+          placeholder="e.g. p-4 px-6"
+          value={cls
+            .split(" ")
+            .filter((x) => /^p[trblxy]?-[0-9]+$/.test(x))
+            .join(" ")}
           onChange={(e) => {
-            const tokens = cls.split(" ").filter((x)=>!/^p[trblxy]?-[0-9]+$/.test(x));
-            update(node.id, { className: [...tokens, e.target.value].join(" ") });
-          }} />
+            const tokens = cls
+              .split(" ")
+              .filter((x) => !/^p[trblxy]?-[0-9]+$/.test(x));
+            update(node.id, {
+              className: [...tokens, e.target.value].join(" "),
+            });
+          }}
+        />
       </div>
       <div>
         <Label>Raw classes</Label>
-        <Input value={cls} onChange={(e) => update(node.id, { className: e.target.value })} />
+        <Input
+          value={cls}
+          onChange={(e) => update(node.id, { className: e.target.value })}
+        />
       </div>
     </div>
   );

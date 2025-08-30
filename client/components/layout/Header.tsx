@@ -10,7 +10,9 @@ function NavItem({ to, children }: { to: string; children: React.ReactNode }) {
       className={({ isActive }) =>
         cn(
           "rounded-md px-3 py-2 text-sm font-medium transition-colors",
-          isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+          isActive
+            ? "text-foreground"
+            : "text-muted-foreground hover:text-foreground",
         )
       }
     >
@@ -20,7 +22,6 @@ function NavItem({ to, children }: { to: string; children: React.ReactNode }) {
 }
 
 export default function Header() {
-
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
