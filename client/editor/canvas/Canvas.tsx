@@ -57,6 +57,9 @@ export default function Canvas() {
   const remove = useAppStore((s) => s.removeNode);
   const sel = useAppStore((s) => s.selection);
   const page = getCurrentPage();
+  const hist = useAppStore((s) => s.history);
+  const app = hist?.present;
+  const canvasDark = useAppStore((s) => s.canvasDark);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -70,20 +73,32 @@ export default function Canvas() {
     return () => window.removeEventListener("keydown", onKey);
   }, [setSel, sel, remove]);
 
+  const primary = canvasDark ? (app?.theme?.darkPrimary || app?.theme?.primary) : app?.theme?.primary;
+  const secondary = canvasDark ? (app?.theme?.darkSecondary || app?.theme?.secondary) : app?.theme?.secondary;
+
   return (
-    <Card className="relative w-full min-h-full p-4">
-      <DropArea>
-        <DropSlot index={0} />
-        {(page?.root.children || []).map((n, i) => (
-          <div key={n.id}>
-            <NodeWrapper n={n} selected={sel.includes(n.id)} onSelect={(id: string) => setSel([id])} />
-            <DropSlot index={i + 1} />
-          </div>
-        ))}
-      </DropArea>
-      <div className="absolute right-4 top-4">
-        <Tree />
-      </div>
-    </Card>
+    <div className={cn(canvasDark && "dark")}
+      style={{
+        // Apply theme only within canvas wrapper
+        ["--primary" as any]: primary || "258 85% 58%",
+        ["--ring" as any]: primary || "258 85% 58%",
+        ["--secondary" as any]: secondary || "220 40% 96%",
+      }}
+    >
+      <Card className="relative w-full min-h-full p-4">
+        <DropArea>
+          <DropSlot index={0} />
+          {(page?.root.children || []).map((n, i) => (
+            <div key={n.id}>
+              <NodeWrapper n={n} selected={sel.includes(n.id)} onSelect={(id: string) => setSel([id])} />
+              <DropSlot index={i + 1} />
+            </div>
+          ))}
+        </DropArea>
+        <div className="absolute right-4 top-4">
+          <Tree />
+        </div>
+      </Card>
+    </div>
   );
 }
