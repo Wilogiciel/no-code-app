@@ -117,7 +117,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
           {
             id: crypto.randomUUID(),
             name: "Home",
-            root: { id: crypto.randomUUID(), type: "Root", props: {}, children: [ { id: crypto.randomUUID(), type: "Menu", props: { align: "left" }, children: [] } ] },
+            root: { id: crypto.randomUUID(), type: "Root", props: {}, children: [ { id: crypto.randomUUID(), type: "Menu", props: { align: "left", showTheme: true }, children: [] } ] },
           },
         ],
         dataSources: [],
