@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function ProjectSettings() {
   const { id } = useParams();
@@ -12,6 +13,8 @@ export default function ProjectSettings() {
   const [secondary, setSecondary] = useState("220 40% 96%");
   const [darkPrimary, setDarkPrimary] = useState("260 85% 70%");
   const [darkSecondary, setDarkSecondary] = useState("240 25% 14%");
+  const [backendKind, setBackendKind] = useState<"rest" | "webhook">("rest");
+  const [backendBaseUrl, setBackendBaseUrl] = useState("");
 
   function hslToHex(hsl: string): string {
     const [h, s, l] = hsl
@@ -67,6 +70,8 @@ export default function ProjectSettings() {
     setSecondary(app.theme?.secondary || secondary);
     setDarkPrimary(app.theme?.darkPrimary || darkPrimary);
     setDarkSecondary(app.theme?.darkSecondary || darkSecondary);
+    setBackendKind(app.backend?.kind || "rest");
+    setBackendBaseUrl(app.backend?.baseUrl || "");
   }, [id]);
 
   function save() {
@@ -83,6 +88,7 @@ export default function ProjectSettings() {
         darkPrimary,
         darkSecondary,
       },
+      backend: { kind: backendKind, baseUrl: backendBaseUrl },
     };
     localStorage.setItem(`app:${id}`, JSON.stringify(next));
   }
@@ -170,18 +176,26 @@ export default function ProjectSettings() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Environment variables</CardTitle>
+            <CardTitle>Backend</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div>
-              <Label htmlFor="api">API_URL</Label>
-              <Input id="api" placeholder="https://api.example.com" />
+              <Label>Provider</Label>
+              <Select value={backendKind} onValueChange={(v: any) => setBackendKind(v)}>
+                <SelectTrigger><SelectValue placeholder="provider" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="rest">REST (Base URL)</SelectItem>
+                  <SelectItem value="webhook">Webhook (full URL set per form)</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-            <div>
-              <Label htmlFor="key">PUBLIC_KEY</Label>
-              <Input id="key" placeholder="pk_..." />
-            </div>
-            <Button variant="outline">Save</Button>
+            {backendKind === "rest" && (
+              <div>
+                <Label htmlFor="base">Base URL</Label>
+                <Input id="base" placeholder="https://api.example.com" value={backendBaseUrl} onChange={(e) => setBackendBaseUrl(e.target.value)} />
+              </div>
+            )}
+            <Button variant="outline" onClick={save}>Save</Button>
           </CardContent>
         </Card>
       </div>
