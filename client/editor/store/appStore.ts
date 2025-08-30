@@ -172,6 +172,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
         dataSources: [],
         variables: [],
         theme: { primary: "258 85% 58%", secondary: "220 40% 96%" },
+        backend: { kind: "rest", baseUrl: "" },
       };
     }
     const canvasDark = localStorage.getItem(`canvasDark:${appId}`) === "1";
