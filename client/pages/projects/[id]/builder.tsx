@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppStore, getCurrentPage } from "@/editor/store/appStore";
 import Palette from "@/editor/palette/Palette";
 import Canvas from "@/editor/canvas/Canvas";
@@ -7,7 +7,12 @@ import Inspector from "@/editor/inspector/Inspector";
 import PreviewSheet from "@/editor/preview/PreviewSheet";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { CATALOG } from "@/editor/components-catalog/catalog";
-import { ComponentNode } from "@/editor/types";
+import { ComponentNode, PageSchema } from "@/editor/types";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function BuilderPage() {
   const { id } = useParams();
