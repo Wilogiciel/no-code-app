@@ -59,6 +59,37 @@ export default function StylesTab() {
           </SelectContent>
         </Select>
       </div>
+      <div>
+        <Label>Text color</Label>
+        <Select onValueChange={(v) => set(v, ["text-foreground","text-muted-foreground","text-primary","text-secondary","text-destructive","text-white","text-black"]) }>
+          <SelectTrigger><SelectValue placeholder="text color" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="text-foreground">foreground</SelectItem>
+            <SelectItem value="text-muted-foreground">muted</SelectItem>
+            <SelectItem value="text-primary">primary</SelectItem>
+            <SelectItem value="text-secondary">secondary</SelectItem>
+            <SelectItem value="text-destructive">destructive</SelectItem>
+            <SelectItem value="text-white">white</SelectItem>
+            <SelectItem value="text-black">black</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div>
+        <Label>Background</Label>
+        <Select onValueChange={(v) => set(v, ["bg-transparent","bg-background","bg-muted","bg-primary","bg-secondary","bg-destructive","bg-white","bg-black"]) }>
+          <SelectTrigger><SelectValue placeholder="background" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="bg-transparent">transparent</SelectItem>
+            <SelectItem value="bg-background">background</SelectItem>
+            <SelectItem value="bg-muted">muted</SelectItem>
+            <SelectItem value="bg-primary">primary</SelectItem>
+            <SelectItem value="bg-secondary">secondary</SelectItem>
+            <SelectItem value="bg-destructive">destructive</SelectItem>
+            <SelectItem value="bg-white">white</SelectItem>
+            <SelectItem value="bg-black">black</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
       <div className="grid grid-cols-2 gap-2">
         <div>
           <Label>Width</Label>
@@ -90,6 +121,35 @@ export default function StylesTab() {
               <SelectItem value="h-64">h-64</SelectItem>
               <SelectItem value="h-80">h-80</SelectItem>
               <SelectItem value="h-96">h-96</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-2">
+        <div>
+          <Label>Border width</Label>
+          <Select onValueChange={(v) => set(v, ["border-0","border","border-2","border-4"]) }>
+            <SelectTrigger><SelectValue placeholder="border" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="border-0">0</SelectItem>
+              <SelectItem value="border">1</SelectItem>
+              <SelectItem value="border-2">2</SelectItem>
+              <SelectItem value="border-4">4</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label>Border color</Label>
+          <Select onValueChange={(v) => set(v, ["border-border","border-primary","border-secondary","border-destructive","border-muted","border-white","border-black"]) }>
+            <SelectTrigger><SelectValue placeholder="border color" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="border-border">default</SelectItem>
+              <SelectItem value="border-primary">primary</SelectItem>
+              <SelectItem value="border-secondary">secondary</SelectItem>
+              <SelectItem value="border-destructive">destructive</SelectItem>
+              <SelectItem value="border-muted">muted</SelectItem>
+              <SelectItem value="border-white">white</SelectItem>
+              <SelectItem value="border-black">black</SelectItem>
             </SelectContent>
           </Select>
         </div>
