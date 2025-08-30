@@ -198,6 +198,40 @@ export default function ProjectsIndex() {
                   </div>
                 </div>
               </div>
+
+              <div>
+                <Label>Backend service</Label>
+                <div className="mt-2 grid grid-cols-3 gap-3">
+                  <button type="button" onClick={() => setBackendKind("rest")} className={`flex items-center gap-2 rounded-md border px-3 py-2 text-sm ${backendKind === "rest" ? "border-primary" : "border-input hover:bg-accent"}`}>
+                    <span className="inline-flex size-5 items-center justify-center rounded bg-primary/10">🌐</span> REST
+                  </button>
+                  <button type="button" onClick={() => setBackendKind("firebase")} className={`flex items-center gap-2 rounded-md border px-3 py-2 text-sm ${backendKind === "firebase" ? "border-primary" : "border-input hover:bg-accent"}`}>
+                    <span className="inline-flex size-5 items-center justify-center rounded bg-primary/10">☁️</span> Firebase
+                  </button>
+                  <button type="button" onClick={() => setBackendKind("supabase")} className={`flex items-center gap-2 rounded-md border px-3 py-2 text-sm ${backendKind === "supabase" ? "border-primary" : "border-input hover:bg-accent"}`}>
+                    <span className="inline-flex size-5 items-center justify-center rounded bg-primary/10">🗄️</span> Supabase
+                  </button>
+                  <button type="button" onClick={() => setBackendKind("netlify")} className={`flex items-center gap-2 rounded-md border px-3 py-2 text-sm ${backendKind === "netlify" ? "border-primary" : "border-input hover:bg-accent"}`}>
+                    <span className="inline-flex size-5 items-center justify-center rounded bg-primary/10">ƒ</span> Netlify
+                  </button>
+                  <button type="button" onClick={() => setBackendKind("vercel")} className={`flex items-center gap-2 rounded-md border px-3 py-2 text-sm ${backendKind === "vercel" ? "border-primary" : "border-input hover:bg-accent"}`}>
+                    <span className="inline-flex size-5 items-center justify-center rounded bg-primary/10">⚡</span> Vercel
+                  </button>
+                  <button type="button" onClick={() => setBackendKind("webhook")} className={`flex items-center gap-2 rounded-md border px-3 py-2 text-sm ${backendKind === "webhook" ? "border-primary" : "border-input hover:bg-accent"}`}>
+                    <span className="inline-flex size-5 items-center justify-center rounded bg-primary/10">🔗</span> Webhook
+                  </button>
+                </div>
+                {backendKind !== "webhook" && (
+                  <div className="mt-3">
+                    <Label htmlFor="baseUrl">Base URL</Label>
+                    <Input id="baseUrl" placeholder="https://api.example.com" value={backendBaseUrl} onChange={(e) => setBackendBaseUrl(e.target.value)} />
+                  </div>
+                )}
+                {backendKind === "webhook" && (
+                  <p className="mt-2 text-xs text-muted-foreground">For Webhook, set the full URL per form using its path property.</p>
+                )}
+              </div>
+
               <div className="flex justify-end gap-2">
                 <Button variant="outline" onClick={() => setOpen(false)}>
                   Cancel
