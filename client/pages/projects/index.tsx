@@ -24,6 +24,8 @@ export default function ProjectsIndex() {
   const [name, setName] = useState("New App");
   const [primaryHex, setPrimaryHex] = useState("#6D28D9");
   const [secondaryHex, setSecondaryHex] = useState("#EEF2F7");
+  const [darkPrimaryHex, setDarkPrimaryHex] = useState("#A78BFA");
+  const [darkSecondaryHex, setDarkSecondaryHex] = useState("#1F2937");
   useEffect(() => { setItems(listProjects()); }, []);
 
   function hexToHslString(hex: string): string {
