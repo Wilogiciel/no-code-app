@@ -24,7 +24,7 @@ function DropSlot({ index }: { index: number }) {
   );
 }
 
-const CONTAINERS = new Set(["Row", "Column", "Grid", "Card", "Dialog"]);
+const CONTAINERS = new Set(["Row", "Column", "Grid", "Card", "Dialog", "Sheet", "Drawer"]);
 
 function NodeWrapper({ n, selected, onSelect }: any) {
   const dropId = `drop:${n.id}`;
