@@ -131,10 +131,14 @@ export default function BuilderPage() {
 
   function createPage() {
     const id = crypto.randomUUID();
+    const curPage = getCurrentPage();
+    const existingMenu = findFirstByType(curPage?.root as any, "Menu");
+    const menuProps = existingMenu?.props || { align: app?.nav?.align || "left", className: app?.nav?.className || "", showTheme: true };
+    const menuNode: ComponentNode = { id: crypto.randomUUID(), type: "Menu", props: menuProps, children: [] };
     const page: PageSchema = {
       id,
       name: pageName || `Page ${app?.pages.length ? app.pages.length + 1 : 1}`,
-      root: { id: crypto.randomUUID(), type: "Root", props: {}, children: [] },
+      root: { id: crypto.randomUUID(), type: "Root", props: {}, children: [menuNode] },
     };
     addPage(page);
     setCurrentPage(page.id);
