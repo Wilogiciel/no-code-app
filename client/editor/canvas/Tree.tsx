@@ -1,5 +1,22 @@
 import { getCurrentPage, useAppStore } from "@/editor/store/appStore";
 import { cn } from "@/lib/utils";
+import { useDraggable, useDroppable } from "@dnd-kit/core";
+
+const CONTAINERS = new Set([
+  "Row",
+  "Column",
+  "Grid",
+  "Card",
+  "Dialog",
+  "Sheet",
+  "Drawer",
+  "Slide",
+  "Animate",
+  "Tabs",
+  "Forms",
+  "Form",
+  "Root",
+]);
 
 function NodeItem({ id, level }: { id: string; level: number }) {
   const hist = useAppStore((s) => s.history);
@@ -20,9 +37,20 @@ function NodeItem({ id, level }: { id: string; level: number }) {
   const node = find(page.root);
   if (!node) return null;
 
+  const dropId = `drop:${id}`;
+  const canDrop = CONTAINERS.has(node.type);
+  const { setNodeRef: setDropRef, isOver } = useDroppable({ id: dropId });
+  const { attributes, listeners, setNodeRef: setDragRef } = useDraggable({ id: `move:${id}`, data: { moveId: id } });
+
   return (
-    <div className={cn("flex items-center justify-between text-xs", level > 0 && "pl-2")}> 
+    <div
+      ref={canDrop ? setDropRef : undefined}
+      className={cn("flex items-center justify-between text-xs rounded", level > 0 && "pl-2", isOver && "bg-accent/50")}
+    >
       <button
+        ref={setDragRef as any}
+        {...listeners}
+        {...attributes}
         className={cn(
           "truncate rounded px-1 py-0.5 text-left hover:bg-accent",
           sel.includes(id) && "bg-accent text-foreground",
@@ -30,7 +58,7 @@ function NodeItem({ id, level }: { id: string; level: number }) {
         onClick={() => setSel([id])}
         title={node.type}
       >
-        {"".padStart(level * 2, "")} {node.name || node.type}
+        {"".padStart(level * 2, "")} {node.id}
       </button>
       <button
         className="ml-2 rounded px-1 text-muted-foreground hover:text-destructive"
