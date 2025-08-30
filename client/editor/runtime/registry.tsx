@@ -10,6 +10,10 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Sheet, SheetTrigger, SheetContent, SheetTitle, SheetDescription, SheetHeader } from "@/components/ui/sheet";
+import { Drawer, DrawerTrigger, DrawerContent, DrawerTitle, DrawerDescription, DrawerHeader } from "@/components/ui/drawer";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 import { toast } from "sonner";
 import { evalTemplate } from "@/editor/runtime/evalExpr";
 import { Separator } from "@/components/ui/separator";
@@ -40,6 +44,25 @@ export function renderNode(n: ComponentNode, ctx: any, handlers: Record<string, 
       return <Input {...common} type="time" />;
     case "Textarea":
       return <Textarea {...common} placeholder={n.props.placeholder} />;
+    case "DatePicker": {
+      function DatePickerComp() {
+        const [open, setOpen] = React.useState(false);
+        const [date, setDate] = React.useState<Date | undefined>(undefined);
+        return (
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className={common.className}>
+                {date ? date.toDateString() : "Pick a date"}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="start" className="w-auto p-0">
+              <Calendar mode="single" selected={date} onSelect={(d: any) => { setDate(d); setOpen(false); }} />
+            </PopoverContent>
+          </Popover>
+        );
+      }
+      return <DatePickerComp />;
+    }
     case "Select": {
       const opts: any[] = Array.isArray(n.props.options) ? n.props.options : [];
       const first = String(opts[0] ?? "");
@@ -150,6 +173,36 @@ export function renderNode(n: ComponentNode, ctx: any, handlers: Record<string, 
             <div className="mt-2">{renderChildren(n, ctx, handlers)}</div>
           </DialogContent>
         </Dialog>
+      );
+    case "Sheet":
+      return (
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button className={common.className} variant="outline">{n.props.triggerText || "Open Sheet"}</Button>
+          </SheetTrigger>
+          <SheetContent side={n.props.side || "right"}>
+            <SheetHeader>
+              {n.props.title && <SheetTitle>{n.props.title}</SheetTitle>}
+              {n.props.description && <SheetDescription>{n.props.description}</SheetDescription>}
+            </SheetHeader>
+            <div className="mt-2">{renderChildren(n, ctx, handlers)}</div>
+          </SheetContent>
+        </Sheet>
+      );
+    case "Drawer":
+      return (
+        <Drawer>
+          <DrawerTrigger asChild>
+            <Button className={common.className} variant="outline">{n.props.triggerText || "Open Drawer"}</Button>
+          </DrawerTrigger>
+          <DrawerContent>
+            <DrawerHeader>
+              {n.props.title && <DrawerTitle>{n.props.title}</DrawerTitle>}
+              {n.props.description && <DrawerDescription>{n.props.description}</DrawerDescription>}
+            </DrawerHeader>
+            <div className="mt-2 px-4 pb-4">{renderChildren(n, ctx, handlers)}</div>
+          </DrawerContent>
+        </Drawer>
       );
     default:
       return <div className="text-xs text-muted-foreground">Unsupported: {n.type}</div>;
