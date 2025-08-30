@@ -395,25 +395,87 @@ export function renderNode(
         const hasDark = !!(
           app?.theme?.darkPrimary && app?.theme?.darkSecondary
         );
-        return (
-          <div
-            className={`flex items-center gap-2 border-b bg-background/70 px-3 py-2 ${common.className || ""}`}
-          >
-            <div
-              className={`flex flex-1 flex-wrap items-center gap-2 ${justify}`}
-            >
+
+        const layout: string = n.props.layout || "top"; // 'top' | 'side' | 'floating'
+        const side: string = n.props.side || "left"; // for side layout: 'left' | 'right'
+        const floating: string = n.props.floating || "top-left"; // 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+        const buttonVariant: "default" | "outline" | "secondary" = n.props.buttonVariant || "default";
+        const barBg: string = n.props.barBg || "bg-background/70"; // can be 'bg-background/70' | 'bg-secondary' | 'bg-transparent'
+        const barBorder: boolean = n.props.barBorder !== false;
+
+        const barBorderCls = barBorder ? "border-b" : "";
+
+        function NavButtons({ vertical }: { vertical: boolean }) {
+          return (
+            <div className={vertical ? "flex flex-col gap-2" : `flex flex-1 flex-wrap items-center gap-2 ${justify}`}>
               {pages.map((p) => (
                 <Button
                   key={p.id}
-                  variant={cur === p.id ? "default" : "outline"}
+                  variant={cur === p.id ? buttonVariant : "outline"}
                   onClick={() => setPage(p.id)}
+                  className={vertical ? "justify-start" : undefined}
                 >
                   {p.name}
                 </Button>
               ))}
             </div>
+          );
+        }
+
+        if (layout === "side") {
+          const posCls = side === "right" ? "ml-auto" : "mr-auto";
+          return (
+            <div className={`flex ${posCls}`}>
+              <div className={`w-56 shrink-0 rounded-md ${barBorder ? "border" : ""} ${barBg} p-3 ${common.className || ""}`}>
+                <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Navigation</div>
+                <NavButtons vertical={true} />
+                {n.props.showTheme && hasDark && (
+                  <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
+                    <span>Dark</span>
+                    <Switch checked={canvasDark} onCheckedChange={setCanvasDark} />
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        }
+
+        if (layout === "floating") {
+          const posMap: Record<string, string> = {
+            "top-left": "fixed top-4 left-4",
+            "top-right": "fixed top-4 right-4",
+            "bottom-left": "fixed bottom-4 left-4",
+            "bottom-right": "fixed bottom-4 right-4",
+          };
+          const posCls = posMap[floating] || posMap["top-left"];
+          return (
+            <div className={`${posCls} z-50 rounded-md ${barBg} ${barBorder ? "border shadow-sm" : ""} p-2 ${common.className || ""}`}>
+              <div className={`flex items-center gap-2 ${justify}`}>
+                {pages.map((p) => (
+                  <Button
+                    key={p.id}
+                    variant={cur === p.id ? buttonVariant : "outline"}
+                    onClick={() => setPage(p.id)}
+                  >
+                    {p.name}
+                  </Button>
+                ))}
+                {n.props.showTheme && hasDark && (
+                  <div className="ml-2 flex items-center gap-2 text-xs text-muted-foreground">
+                    <span>Dark</span>
+                    <Switch checked={canvasDark} onCheckedChange={setCanvasDark} />
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        }
+
+        return (
+          <div className={`flex items-center gap-2 ${barBorderCls} ${barBg} px-3 py-2 ${common.className || ""}`}>
+            <NavButtons vertical={false} />
             {n.props.showTheme && hasDark && (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <div className="ml-auto flex items-center gap-2 text-sm text-muted-foreground">
                 <span>Dark</span>
                 <Switch checked={canvasDark} onCheckedChange={setCanvasDark} />
               </div>
