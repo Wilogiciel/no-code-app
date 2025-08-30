@@ -33,9 +33,12 @@ export type AppStore = {
   appId: string | null;
   history: HistoryState<AppSchema> | null;
   selection: string[];
+  currentPageId: string | null;
   loadApp: (appId: string) => void;
   saveApp: () => void;
   setSelection: (ids: string[]) => void;
+  setCurrentPage: (pageId: string) => void;
+  updateApp: (patch: Partial<AppSchema>) => void;
   addNode: (parentId: string, node: ComponentNode) => void;
   removeNode: (id: string) => void;
   moveNode: (id: string, newParentId: string, index?: number) => void;
@@ -98,6 +101,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
   appId: null,
   history: null,
   selection: [],
+  currentPageId: null,
   loadApp: (appId) => {
     const raw = localStorage.getItem(storageKey(appId));
     let app: AppSchema;
@@ -118,7 +122,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
         theme: { primary: "258 85% 58%", secondary: "220 40% 96%" },
       };
     }
-    set({ appId, history: createHistory(app) });
+    set({ appId, history: createHistory(app), currentPageId: app.pages[0].id });
   },
   saveApp: () => {
     const id = get().appId;
@@ -127,6 +131,12 @@ export const useAppStore = create<AppStore>((set, get) => ({
     localStorage.setItem(storageKey(id), JSON.stringify(hist.present));
   },
   setSelection: (ids) => set({ selection: ids }),
+  setCurrentPage: (pageId) => set({ currentPageId: pageId }),
+  updateApp: (patch) => {
+    const hist = get().history; if (!hist) return;
+    const app = hist.present;
+    set({ history: push(hist, { ...app, ...patch }) });
+  },
   addNode: (parentId, node) => {
     const hist = get().history; if (!hist) return;
     const app = hist.present;
@@ -174,7 +184,8 @@ export const useAppStore = create<AppStore>((set, get) => ({
   addPage: (page) => {
     const hist = get().history; if (!hist) return;
     const app = hist.present;
-    set({ history: push(hist, { ...app, pages: [...app.pages, page] }) });
+    const next = { ...app, pages: [...app.pages, page] };
+    set({ history: push(hist, next), currentPageId: page.id });
   },
   addVariable: (v) => {
     const hist = get().history; if (!hist) return;
@@ -189,7 +200,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
   seedSample: () => {
     const hist = get().history; if (!hist) return;
     const app = hist.present;
-    const page = app.pages[0];
+    const page = getCurrentPage()!;
     const root = page.root;
     const button1: ComponentNode = { id: crypto.randomUUID(), type: "Button", name: "SayHi", props: { text: "Say hi" }, children: [] };
     const button2: ComponentNode = { id: crypto.randomUUID(), type: "Button", name: "LoadPosts", props: { text: "Load posts" }, children: [] };
@@ -218,9 +229,12 @@ export const useAppStore = create<AppStore>((set, get) => ({
 }));
 
 export function getCurrentPage(): PageSchema | null {
-  const { history } = useAppStore.getState();
+  const { history, currentPageId } = useAppStore.getState();
   if (!history) return null;
-  return history.present.pages[0];
+  const pages = history.present.pages;
+  if (!pages.length) return null;
+  if (currentPageId) return pages.find((p) => p.id === currentPageId) || pages[0];
+  return pages[0];
 }
 
 export function getNodeById(id: string): ComponentNode | null {
