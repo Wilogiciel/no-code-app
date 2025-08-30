@@ -291,7 +291,8 @@ export function renderNode(
           const backend = app?.backend || { kind: "rest", baseUrl: "" };
           try {
             let url = path;
-            if (backend.kind === "rest") {
+            const baseKinds = new Set(["rest", "firebase", "supabase", "netlify", "vercel"]);
+            if (baseKinds.has(String(backend.kind))) {
               const base = backend.baseUrl || "";
               url = base.endsWith("/") || path.startsWith("/") ? `${base}${path}` : `${base}/${path}`;
             }
@@ -329,7 +330,8 @@ export function renderNode(
           const backend = app?.backend || { kind: "rest", baseUrl: "" };
           try {
             let url = path;
-            if (backend.kind === "rest") {
+            const baseKinds = new Set(["rest", "firebase", "supabase", "netlify", "vercel"]);
+            if (baseKinds.has(String(backend.kind))) {
               const base = backend.baseUrl || "";
               url = base.endsWith("/") || path.startsWith("/") ? `${base}${path}` : `${base}/${path}`;
             }
