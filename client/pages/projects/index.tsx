@@ -83,6 +83,7 @@ export default function ProjectsIndex() {
       darkPrimary: hexToHslString(darkPrimaryHex),
       darkSecondary: hexToHslString(darkSecondaryHex),
     };
+    const rootId = `root-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 10)}`;
     const app = {
       id,
       name,
@@ -91,12 +92,12 @@ export default function ProjectsIndex() {
           id: crypto.randomUUID(),
           name: "Home",
           root: {
-            id: crypto.randomUUID(),
+            id: rootId,
             type: "Root",
             props: {},
             children: [
               {
-                id: crypto.randomUUID(),
+                id: "Menu-1",
                 type: "Menu",
                 props: { align: "left", showTheme: true },
                 children: [],
