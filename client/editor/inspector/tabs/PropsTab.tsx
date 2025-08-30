@@ -150,6 +150,100 @@ export default function PropsTab() {
           )}
         </div>
       )}
+      {node.type === "Animate" && (
+        <div className="space-y-2">
+          <div>
+            <Label>Animation</Label>
+            <Select value={node.props.animation || "fade-in"} onValueChange={(v) => update(node.id, { animation: v })}>
+              <SelectTrigger><SelectValue placeholder="animation" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="fade-in">fade-in</SelectItem>
+                <SelectItem value="fade-in-up">fade-in-up</SelectItem>
+                <SelectItem value="fade-in-down">fade-in-down</SelectItem>
+                <SelectItem value="fade-in-left">fade-in-left</SelectItem>
+                <SelectItem value="fade-in-right">fade-in-right</SelectItem>
+                <SelectItem value="slide-in-left">slide-in-left</SelectItem>
+                <SelectItem value="slide-in-right">slide-in-right</SelectItem>
+                <SelectItem value="slide-in-up">slide-in-up</SelectItem>
+                <SelectItem value="slide-in-down">slide-in-down</SelectItem>
+                <SelectItem value="zoom-in">zoom-in</SelectItem>
+                <SelectItem value="zoom-out">zoom-out</SelectItem>
+                <SelectItem value="bounce">bounce</SelectItem>
+                <SelectItem value="pulse">pulse</SelectItem>
+                <SelectItem value="rotate-in">rotate-in</SelectItem>
+                <SelectItem value="flip-in-x">flip-in-x</SelectItem>
+                <SelectItem value="flip-in-y">flip-in-y</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <Label>Duration (ms)</Label>
+              <Input type="number" min={50} step={50} value={node.props.durationMs || 600} onChange={(e) => update(node.id, { durationMs: Number(e.target.value) })} />
+            </div>
+            <div>
+              <Label>Delay (ms)</Label>
+              <Input type="number" min={0} step={50} value={node.props.delayMs || 0} onChange={(e) => update(node.id, { delayMs: Number(e.target.value) })} />
+            </div>
+            <div>
+              <Label>Stagger (ms)</Label>
+              <Input type="number" min={0} step={50} value={node.props.staggerMs || 0} onChange={(e) => update(node.id, { staggerMs: Number(e.target.value) })} />
+            </div>
+            <div>
+              <Label>Iterations</Label>
+              <Input type="number" min={1} value={node.props.iteration || 1} onChange={(e) => update(node.id, { iteration: Number(e.target.value) })} />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <Label>Easing</Label>
+              <Select value={node.props.easing || "ease"} onValueChange={(v) => update(node.id, { easing: v })}>
+                <SelectTrigger><SelectValue placeholder="easing" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ease">ease</SelectItem>
+                  <SelectItem value="linear">linear</SelectItem>
+                  <SelectItem value="ease-in">ease-in</SelectItem>
+                  <SelectItem value="ease-out">ease-out</SelectItem>
+                  <SelectItem value="ease-in-out">ease-in-out</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Direction</Label>
+              <Select value={node.props.direction || "normal"} onValueChange={(v) => update(node.id, { direction: v })}>
+                <SelectTrigger><SelectValue placeholder="direction" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="normal">normal</SelectItem>
+                  <SelectItem value="reverse">reverse</SelectItem>
+                  <SelectItem value="alternate">alternate</SelectItem>
+                  <SelectItem value="alternate-reverse">alternate-reverse</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="flex items-center justify-between">
+            <Label>Infinite</Label>
+            <Switch checked={!!node.props.infinite} onCheckedChange={(v) => update(node.id, { infinite: v })} />
+          </div>
+          <div>
+            <Label>Trigger</Label>
+            <Select value={node.props.trigger || "mount"} onValueChange={(v) => update(node.id, { trigger: v })}>
+              <SelectTrigger><SelectValue placeholder="trigger" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="mount">on mount</SelectItem>
+                <SelectItem value="hover">on hover</SelectItem>
+                <SelectItem value="inView">on scroll into view</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          {node.props.trigger === "inView" && (
+            <div className="flex items-center justify-between">
+              <Label>Once</Label>
+              <Switch checked={node.props.once !== false} onCheckedChange={(v) => update(node.id, { once: v })} />
+            </div>
+          )}
+        </div>
+      )}
       <Separator />
       <div>
         <Label htmlFor="class">Classes</Label>

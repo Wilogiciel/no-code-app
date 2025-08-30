@@ -45,6 +45,7 @@ function DraggableItem({ type, title }: { type: string; title: string }) {
       "Sheet",
       "Drawer",
       "Slide",
+      "Animate",
     ]);
     const targetId = (() => {
       if (!selected) return page.root.id;

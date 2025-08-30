@@ -267,6 +267,96 @@ export function renderNode(
     }
     case "Separator":
       return <Separator />;
+    case "Animate": {
+      function AnimateComp() {
+        const anim = String(n.props.animation || "fade-in");
+        const trigger = String(n.props.trigger || "mount"); // mount | hover | inView
+        const once = n.props.once !== false;
+        const durationMs = Math.max(50, Number(n.props.durationMs || 600));
+        const delayMs = Math.max(0, Number(n.props.delayMs || 0));
+        const easing = String(n.props.easing || "ease");
+        const iteration = Number(n.props.iteration || 1);
+        const infinite = !!n.props.infinite;
+        const direction = String(n.props.direction || "normal");
+        const staggerMs = Math.max(0, Number(n.props.staggerMs || 0));
+
+        const [activeKey, setActiveKey] = React.useState(0);
+        const [inView, setInView] = React.useState(trigger !== "inView");
+        const ref = React.useRef<HTMLDivElement | null>(null);
+
+        React.useEffect(() => {
+          if (trigger !== "inView") return;
+          const el = ref.current;
+          if (!el) return;
+          const io = new IntersectionObserver(
+            (entries) => {
+              const e = entries[0];
+              if (e.isIntersecting) {
+                setInView(true);
+                if (once && io) io.disconnect();
+              } else if (!once) {
+                setInView(false);
+              }
+            },
+            { threshold: 0.15 },
+          );
+          io.observe(el);
+          return () => io.disconnect();
+        }, [trigger, once]);
+
+        function restart() {
+          setActiveKey((k) => k + 1);
+        }
+
+        const commonAnimStyle: React.CSSProperties = {
+          animationDuration: `${durationMs}ms`,
+          animationDelay: `${delayMs}ms`,
+          animationTimingFunction: easing,
+          animationIterationCount: infinite ? ("infinite" as any) : String(iteration),
+          animationDirection: direction as any,
+          animationFillMode: "both",
+        };
+
+        const className = `${common.className || ""} anim-${anim}`.trim();
+
+        if (staggerMs > 0) {
+          return (
+            <div
+              ref={ref}
+              key={activeKey}
+              onMouseEnter={() => trigger === "hover" && restart()}
+              className={common.className}
+            >
+              {(n.children || []).map((c, i) => (
+                <div
+                  key={(c as any).id || i}
+                  className={`${inView ? `anim-${anim}` : ""}`}
+                  style={{
+                    ...commonAnimStyle,
+                    animationDelay: `${delayMs + i * staggerMs}ms`,
+                  }}
+                >
+                  {renderNode(c, ctx, handlers)}
+                </div>
+              ))}
+            </div>
+          );
+        }
+
+        return (
+          <div
+            ref={ref}
+            key={activeKey}
+            onMouseEnter={() => trigger === "hover" && restart()}
+            className={inView || trigger === "mount" ? className : common.className}
+            style={inView || trigger === "mount" ? commonAnimStyle : undefined}
+          >
+            {renderChildren(n, ctx, handlers)}
+          </div>
+        );
+      }
+      return <AnimateComp />;
+    }
     case "Table": {
       const rows: any[] = (ctx.vars?.posts || []).slice(0, 5);
       if (!rows?.length)

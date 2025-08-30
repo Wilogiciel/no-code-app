@@ -89,6 +89,23 @@ export const CATALOG: CatalogItem[] = [
     defaults: { tabs: ["One", "Two"] },
   },
   {
+    type: "Animate",
+    title: "Animate (Wrapper)",
+    category: "Animation",
+    defaults: {
+      animation: "fade-in",
+      trigger: "mount",
+      once: true,
+      durationMs: 600,
+      delayMs: 0,
+      iteration: 1,
+      infinite: false,
+      easing: "ease",
+      direction: "normal",
+      staggerMs: 0,
+    },
+  },
+  {
     type: "Menu",
     title: "Menu (Top Nav)",
     category: "Navigation",

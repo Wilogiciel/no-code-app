@@ -44,6 +44,7 @@ const CONTAINERS = new Set([
   "Sheet",
   "Drawer",
   "Slide",
+  "Animate",
 ]);
 
 function NodeWrapper({ n, selected, onSelect }: any) {
