@@ -108,6 +108,7 @@ export default function ProjectsIndex() {
       variables: [],
       dataSources: [],
       theme,
+      backend: { kind: backendKind, baseUrl: backendBaseUrl },
     };
     localStorage.setItem(`app:${id}`, JSON.stringify(app));
     setItems(listProjects());
