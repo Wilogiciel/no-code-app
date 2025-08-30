@@ -314,6 +314,50 @@ export function renderNode(
       }
       return <FormComp />;
     }
+    case "Forms": {
+      function FormsComp() {
+        const hist = useAppStore((s) => s.history);
+        const app = hist?.present;
+        const cols = Number(n.props.cols || 2);
+        const gridCls = `grid grid-cols-${cols} gap-4`;
+        async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+          e.preventDefault();
+          const fd = new FormData(e.currentTarget);
+          const data = Object.fromEntries(Array.from(fd.entries()));
+          const method = (n.props.method || "POST").toUpperCase();
+          const path = String(n.props.path || "/submit");
+          const backend = app?.backend || { kind: "rest", baseUrl: "" };
+          try {
+            let url = path;
+            if (backend.kind === "rest") {
+              const base = backend.baseUrl || "";
+              url = base.endsWith("/") || path.startsWith("/") ? `${base}${path}` : `${base}/${path}`;
+            }
+            const res = await fetch(url, {
+              method,
+              headers: { "Content-Type": "application/json" },
+              body: method === "GET" ? undefined : JSON.stringify(data),
+            });
+            if (!res.ok) throw new Error(`${res.status}`);
+            toast("Form submitted");
+          } catch (err: any) {
+            toast(`Submit failed: ${err?.message || err}`);
+          }
+        }
+        return (
+          <form className={common.className} onSubmit={onSubmit}>
+            <div className={gridCls}>{renderChildren(n, ctx, handlers)}</div>
+            <div className="mt-3 flex justify-end gap-2">
+              {n.props.showReset && (
+                <Button type="reset" variant="outline">{n.props.resetText || "Reset"}</Button>
+              )}
+              <Button type="submit">{n.props.submitText || "Submit"}</Button>
+            </div>
+          </form>
+        );
+      }
+      return <FormsComp />;
+    }
     case "Menu": {
       function MenuComp() {
         const hist = useAppStore((s) => s.history);
