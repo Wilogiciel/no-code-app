@@ -29,6 +29,12 @@ export default function PropsTab() {
           <Input id="ph" value={node.props.placeholder || ""} onChange={(e) => update(node.id, { placeholder: e.target.value })} />
         </div>
       )}
+      {(node.type === "Input" || node.type === "Textarea" || node.type === "Select" || node.type === "Date" || node.type === "Time" || node.type === "Switch") && (
+        <div>
+          <Label htmlFor="lbl">Label</Label>
+          <Input id="lbl" value={node.props.label || ""} onChange={(e) => update(node.id, { label: e.target.value })} />
+        </div>
+      )}
       {(node.type === "Row" || node.type === "Column") && (
         <div className="grid grid-cols-2 gap-2">
           <div>
