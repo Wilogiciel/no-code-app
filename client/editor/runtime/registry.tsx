@@ -81,6 +81,7 @@ export function renderNode(
       return (
         <Button
           {...common}
+          type={n.props.submit ? "submit" : undefined}
           onClick={() => {
             if (n.props.onClickToast) {
               toast(evalTemplate(String(n.props.onClickToast), ctx));
@@ -91,13 +92,28 @@ export function renderNode(
         </Button>
       );
     case "Input":
-      return <Input {...common} placeholder={n.props.placeholder} />;
+      return (
+        <Input
+          {...common}
+          name={n.props.name}
+          placeholder={n.props.placeholder}
+          defaultValue={n.props.defaultValue}
+          type={n.props.type}
+        />
+      );
     case "Date":
       return <Input {...common} type="date" />;
     case "Time":
       return <Input {...common} type="time" />;
     case "Textarea":
-      return <Textarea {...common} placeholder={n.props.placeholder} />;
+      return (
+        <Textarea
+          {...common}
+          name={n.props.name}
+          placeholder={n.props.placeholder}
+          defaultValue={n.props.defaultValue}
+        />
+      );
     case "DatePicker": {
       function DatePickerComp() {
         const [open, setOpen] = React.useState(false);
@@ -262,6 +278,42 @@ export function renderNode(
           alt={n.props.alt || ""}
         />
       );
+    case "Form": {
+      function FormComp() {
+        const hist = useAppStore((s) => s.history);
+        const app = hist?.present;
+        async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+          e.preventDefault();
+          const fd = new FormData(e.currentTarget);
+          const data = Object.fromEntries(Array.from(fd.entries()));
+          const method = (n.props.method || "POST").toUpperCase();
+          const path = String(n.props.path || "/submit");
+          const backend = app?.backend || { kind: "rest", baseUrl: "" };
+          try {
+            let url = path;
+            if (backend.kind === "rest") {
+              const base = backend.baseUrl || "";
+              url = base.endsWith("/") || path.startsWith("/") ? `${base}${path}` : `${base}/${path}`;
+            }
+            const res = await fetch(url, {
+              method,
+              headers: { "Content-Type": "application/json" },
+              body: method === "GET" ? undefined : JSON.stringify(data),
+            });
+            if (!res.ok) throw new Error(`${res.status}`);
+            toast("Form submitted");
+          } catch (err: any) {
+            toast(`Submit failed: ${err?.message || err}`);
+          }
+        }
+        return (
+          <form className={common.className} onSubmit={onSubmit}>
+            {renderChildren(n, ctx, handlers)}
+          </form>
+        );
+      }
+      return <FormComp />;
+    }
     case "Menu": {
       function MenuComp() {
         const hist = useAppStore((s) => s.history);
