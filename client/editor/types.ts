@@ -50,6 +50,10 @@ export type AppSchema = {
   pages: PageSchema[];
   dataSources: DataSource[];
   variables: VariableDef[];
+  theme?: {
+    primary: string; // H S L (no hsl())
+    secondary: string; // H S L
+  };
 };
 
 export type SelectionState = { selectedIds: string[] };
