@@ -72,6 +72,7 @@ export type AppStore = {
   addVariable: (v: VariableDef) => void;
   addDataSource: (ds: DataSource) => void;
   seedSample: () => void;
+  generateId: (type: string) => string;
   undo: () => void;
   redo: () => void;
 };
@@ -147,6 +148,18 @@ export const useAppStore = create<AppStore>((set, get) => ({
     let app: AppSchema;
     if (raw) app = JSON.parse(raw);
     else {
+      // Build initial app with deterministic component IDs
+      const used = new Set<string>();
+      const gen = (type: string) => {
+        let i = 1;
+        let id = `${type}-${i}`;
+        while (used.has(id)) {
+          i++;
+          id = `${type}-${i}`;
+        }
+        used.add(id);
+        return id;
+      };
       app = {
         id: appId,
         name: "Untitled",
@@ -155,12 +168,12 @@ export const useAppStore = create<AppStore>((set, get) => ({
             id: crypto.randomUUID(),
             name: "Home",
             root: {
-              id: crypto.randomUUID(),
+              id: gen("Root"),
               type: "Root",
               props: {},
               children: [
                 {
-                  id: crypto.randomUUID(),
+                  id: gen("Menu"),
                   type: "Menu",
                   props: { align: "left", showTheme: true },
                   children: [],
@@ -206,6 +219,23 @@ export const useAppStore = create<AppStore>((set, get) => ({
     const hist = get().history;
     if (!hist) return;
     const app = hist.present;
+    // Ensure node has an ID in the ComponentType-N format
+    const idSet = new Set<string>();
+    for (const pg of app.pages) {
+      (function collect(n: ComponentNode) {
+        idSet.add(n.id);
+        for (const c of n.children || []) collect(c);
+      })(pg.root);
+    }
+    if (!node.id || idSet.has(node.id)) {
+      let i = 1;
+      let newId = `${node.type}-${i}`;
+      while (idSet.has(newId)) {
+        i++;
+        newId = `${node.type}-${i}`;
+      }
+      node = { ...node, id: newId };
+    }
     const pages = app.pages.map((p) => ({
       ...p,
       root: updateNode(p.root, parentId, (n) => {
@@ -304,34 +334,56 @@ export const useAppStore = create<AppStore>((set, get) => ({
     const app = hist.present;
     const page = getCurrentPage()!;
     const root = page.root;
+
+    // Build a used ID set and a local generator that considers both existing and new IDs
+    const used = new Set<string>();
+    (function collectAll() {
+      for (const pg of app.pages) {
+        (function collect(n: ComponentNode) {
+          used.add(n.id);
+          for (const c of n.children || []) collect(c);
+        })(pg.root);
+      }
+    })();
+    const gen = (type: string) => {
+      let i = 1;
+      let id = `${type}-${i}`;
+      while (used.has(id)) {
+        i++;
+        id = `${type}-${i}`;
+      }
+      used.add(id);
+      return id;
+    };
+
     const button1: ComponentNode = {
-      id: crypto.randomUUID(),
+      id: gen("Button"),
       type: "Button",
       name: "SayHi",
       props: { text: "Say hi" },
       children: [],
     };
     const button2: ComponentNode = {
-      id: crypto.randomUUID(),
+      id: gen("Button"),
       type: "Button",
       name: "LoadPosts",
       props: { text: "Load posts" },
       children: [],
     };
     const card: ComponentNode = {
-      id: crypto.randomUUID(),
+      id: gen("Card"),
       type: "Card",
       props: { title: "Sample" },
       children: [
         {
-          id: crypto.randomUUID(),
+          id: gen("Heading"),
           type: "Heading",
           props: { level: 3, text: "Welcome" },
           children: [],
         },
         button1,
         button2,
-        { id: crypto.randomUUID(), type: "Table", props: {}, children: [] },
+        { id: gen("Table"), type: "Table", props: {}, children: [] },
       ],
     };
     const variables = [
@@ -365,6 +417,26 @@ export const useAppStore = create<AppStore>((set, get) => ({
       pages: [{ ...page, root: { ...root, children: [card] } }],
     };
     set({ history: push(hist, newApp) });
+  },
+  generateId: (type: string) => {
+    const hist = get().history;
+    const app = hist?.present;
+    const used = new Set<string>();
+    if (app) {
+      for (const pg of app.pages) {
+        (function collect(n: ComponentNode) {
+          used.add(n.id);
+          for (const c of n.children || []) collect(c);
+        })(pg.root);
+      }
+    }
+    let i = 1;
+    let id = `${type}-${i}`;
+    while (used.has(id)) {
+      i++;
+      id = `${type}-${i}`;
+    }
+    return id;
   },
   undo: () => {
     const hist = get().history;
