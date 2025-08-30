@@ -25,6 +25,16 @@ export default function BuilderPage() {
     return () => clearInterval(t);
   }, [save]);
 
+  const hist = useAppStore((s) => s.history);
+  useEffect(() => {
+    const app = hist?.present;
+    if (!app?.theme) return;
+    const root = document.documentElement;
+    root.style.setProperty("--primary", app.theme.primary);
+    root.style.setProperty("--ring", app.theme.primary);
+    root.style.setProperty("--secondary", app.theme.secondary);
+  }, [hist]);
+
   function handleDrop(e: DragEndEvent) {
     const data = e.active.data.current as any;
     if (!e.over) return;
