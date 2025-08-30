@@ -17,7 +17,7 @@ function DraggableItem({ type, title }: { type: string; title: string }) {
     const catalog = CATALOG.find((c) => c.type === type);
     if (!page) return;
     const selected = useAppStore.getState().selection[0];
-    const CONTAINERS = new Set(["Row", "Column", "Grid", "Card", "Dialog"]);
+    const CONTAINERS = new Set(["Row", "Column", "Grid", "Card", "Dialog", "Sheet", "Drawer"]);
     const targetId = (() => {
       if (!selected) return page.root.id;
       const selectedNode = (function find(n: any): any { if (n.id===selected) return n; for (const c of n.children||[]) { const f=find(c); if (f) return f; } return null; })(page.root);
