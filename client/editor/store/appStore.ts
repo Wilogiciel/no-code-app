@@ -115,6 +115,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
         ],
         dataSources: [],
         variables: [],
+        theme: { primary: "258 85% 58%", secondary: "220 40% 96%" },
       };
     }
     set({ appId, history: createHistory(app) });
