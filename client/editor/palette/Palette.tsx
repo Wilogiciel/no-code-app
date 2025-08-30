@@ -62,7 +62,7 @@ function DraggableItem({ type, title }: { type: string; title: string }) {
         : page.root.id;
     })();
     const node: ComponentNode = {
-      id: crypto.randomUUID(),
+      id: useAppStore.getState().generateId(type),
       type,
       name: type,
       props: { ...(catalog?.defaults || {}) },
