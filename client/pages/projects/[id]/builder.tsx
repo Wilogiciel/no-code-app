@@ -32,20 +32,6 @@ export default function BuilderPage() {
   }, [save]);
 
   const hist = useAppStore((s) => s.history);
-  const [dark, setDark] = useState(() => {
-    return document.documentElement.classList.contains("dark") || localStorage.getItem("theme:dark") === "1";
-  });
-  useEffect(() => {
-    const app = hist?.present;
-    if (!app?.theme) return;
-    const root = document.documentElement;
-    const isDark = dark;
-    const primary = isDark ? (app.theme.darkPrimary || app.theme.primary) : app.theme.primary;
-    const secondary = isDark ? (app.theme.darkSecondary || app.theme.secondary) : app.theme.secondary;
-    root.style.setProperty("--primary", primary);
-    root.style.setProperty("--ring", primary);
-    root.style.setProperty("--secondary", secondary);
-  }, [hist, dark]);
 
   function handleDrop(e: DragEndEvent) {
     const data = e.active.data.current as any;
