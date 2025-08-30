@@ -58,6 +58,28 @@ export default function BuilderPage() {
     return () => clearInterval(t);
   }, [save]);
 
+  // Suppress benign Chromium ResizeObserver loop warnings
+  useEffect(() => {
+    const onError = (e: any) => {
+      const msg = e?.message || e?.reason?.message || "";
+      if (
+        msg === "ResizeObserver loop completed with undelivered notifications." ||
+        msg === "ResizeObserver loop limit exceeded"
+      ) {
+        e.preventDefault?.();
+        e.stopImmediatePropagation?.();
+        return false;
+      }
+      return undefined;
+    };
+    window.addEventListener("error", onError);
+    window.addEventListener("unhandledrejection", onError as any);
+    return () => {
+      window.removeEventListener("error", onError);
+      window.removeEventListener("unhandledrejection", onError as any);
+    };
+  }, []);
+
   const hist = useAppStore((s) => s.history);
   const doUndo = useAppStore((s) => s.undo);
   const doRedo = useAppStore((s) => s.redo);
