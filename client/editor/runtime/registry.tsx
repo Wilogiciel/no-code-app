@@ -171,6 +171,7 @@ export function renderNode(n: ComponentNode, ctx: any, handlers: Record<string, 
         const canvasDark = useAppStore((s) => s.canvasDark);
         const setCanvasDark = useAppStore((s) => s.setCanvasDark);
         const justify = n.props.align === "center" ? "justify-center" : n.props.align === "right" ? "justify-end" : "justify-start";
+        const hasDark = !!(app?.theme?.darkPrimary && app?.theme?.darkSecondary);
         return (
           <div className={`flex items-center gap-2 border-b bg-background/70 px-3 py-2 ${common.className || ""}`}>
             <div className={`flex flex-1 flex-wrap items-center gap-2 ${justify}`}>
@@ -178,7 +179,7 @@ export function renderNode(n: ComponentNode, ctx: any, handlers: Record<string, 
                 <Button key={p.id} variant={cur === p.id ? "default" : "outline"} onClick={() => setPage(p.id)}>{p.name}</Button>
               ))}
             </div>
-            {n.props.showTheme && (
+            {n.props.showTheme && hasDark && (
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <span>Dark</span>
                 <Switch checked={canvasDark} onCheckedChange={setCanvasDark} />
