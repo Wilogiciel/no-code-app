@@ -68,6 +68,7 @@ export type AppStore = {
   updateProps: (id: string, props: Record<string, any>) => void;
   updateBindings: (id: string, bindings: Record<string, string>) => void;
   addPage: (page: PageSchema) => void;
+  removePage: (pageId: string) => void;
   addVariable: (v: VariableDef) => void;
   addDataSource: (ds: DataSource) => void;
   seedSample: () => void;
@@ -269,6 +270,18 @@ export const useAppStore = create<AppStore>((set, get) => ({
     const app = hist.present;
     const next = { ...app, pages: [...app.pages, page] };
     set({ history: push(hist, next), currentPageId: page.id });
+  },
+  removePage: (pageId) => {
+    const hist = get().history;
+    if (!hist) return;
+    const app = hist.present;
+    if (app.pages.length <= 1) return; // keep at least one page
+    const pages = app.pages.filter((p) => p.id !== pageId);
+    let nextCurrent = get().currentPageId;
+    if (!pages.find((p) => p.id === nextCurrent)) {
+      nextCurrent = pages[0]?.id || null;
+    }
+    set({ history: push(hist, { ...app, pages }), currentPageId: nextCurrent });
   },
   addVariable: (v) => {
     const hist = get().history;
