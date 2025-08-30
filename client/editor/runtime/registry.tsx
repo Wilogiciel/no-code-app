@@ -1,6 +1,7 @@
 import { ComponentNode } from "@/editor/types";
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -95,6 +96,7 @@ export function renderNode(
       return (
         <Input
           {...common}
+          id={n.props.id}
           name={n.props.name}
           placeholder={n.props.placeholder}
           defaultValue={n.props.defaultValue}
@@ -109,6 +111,7 @@ export function renderNode(
       return (
         <Textarea
           {...common}
+          id={n.props.id}
           name={n.props.name}
           placeholder={n.props.placeholder}
           defaultValue={n.props.defaultValue}
@@ -145,7 +148,7 @@ export function renderNode(
       const first = String(opts[0] ?? "");
       return (
         <Select defaultValue={first}>
-          <SelectTrigger className={common.className}>
+          <SelectTrigger id={n.props.id} className={common.className}>
             <SelectValue placeholder="Select" />
           </SelectTrigger>
           <SelectContent>
@@ -321,6 +324,18 @@ export function renderNode(
         const app = hist?.present;
         const cols = Number(n.props.cols || 2);
         const gridCls = `grid grid-cols-${cols} gap-4`;
+        const isField = (t: string) => ["Input", "Textarea", "Select", "Date", "Time", "Switch"].includes(t);
+        function renderWithLabel(child: ComponentNode) {
+          const id = child.props.id || child.id;
+          const labelText = child.props.label || child.props.name || child.name || child.type;
+          const copy: ComponentNode = { ...child, props: { ...child.props, id, name: child.props.name || id } };
+          return (
+            <div key={child.id} className="flex flex-col gap-1">
+              <Label htmlFor={id}>{labelText}</Label>
+              {renderNode(copy, ctx, handlers)}
+            </div>
+          );
+        }
         async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
           e.preventDefault();
           const fd = new FormData(e.currentTarget);
@@ -348,7 +363,9 @@ export function renderNode(
         }
         return (
           <form className={common.className} onSubmit={onSubmit}>
-            <div className={gridCls}>{renderChildren(n, ctx, handlers)}</div>
+            <div className={gridCls}>
+              {(n.children || []).map((c) => (isField(c.type) ? renderWithLabel(c) : renderNode(c, ctx, handlers)))}
+            </div>
             <div className="mt-3 flex justify-end gap-2">
               {n.props.showReset && (
                 <Button type="reset" variant="outline">{n.props.resetText || "Reset"}</Button>
