@@ -7,6 +7,7 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useAppStore } from "@/editor/store/appStore";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -160,6 +161,34 @@ export function renderNode(n: ComponentNode, ctx: any, handlers: Record<string, 
       return <Badge className={common.className} variant={n.props.variant as any}>{n.props.text || "Badge"}</Badge>;
     case "Image":
       return <img className={common.className} src={n.props.src} alt={n.props.alt || ""} />;
+    case "Menu": {
+      function MenuComp() {
+        const hist = useAppStore((s) => s.history);
+        const app = hist?.present;
+        const pages = app?.pages || [];
+        const cur = useAppStore((s) => s.currentPageId);
+        const setPage = useAppStore((s) => s.setCurrentPage);
+        const canvasDark = useAppStore((s) => s.canvasDark);
+        const setCanvasDark = useAppStore((s) => s.setCanvasDark);
+        const justify = n.props.align === "center" ? "justify-center" : n.props.align === "right" ? "justify-end" : "justify-start";
+        return (
+          <div className={`flex items-center gap-2 border-b bg-background/70 px-3 py-2 ${justify} ${common.className || ""}`}>
+            <div className="flex flex-wrap items-center gap-2">
+              {pages.map((p) => (
+                <Button key={p.id} variant={cur === p.id ? "default" : "outline"} onClick={() => setPage(p.id)}>{p.name}</Button>
+              ))}
+            </div>
+            {n.props.showTheme && (
+              <div className="ml-auto flex items-center gap-2 text-sm text-muted-foreground">
+                <span>Dark</span>
+                <Switch checked={canvasDark} onCheckedChange={setCanvasDark} />
+              </div>
+            )}
+          </div>
+        );
+      }
+      return <MenuComp />;
+    }
     case "Dialog":
       return (
         <Dialog>
